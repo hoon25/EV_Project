@@ -16,7 +16,9 @@
 
 
 
-![bungbungchacha](./bung.jpg)
+![bungbungchacha](README.assets/bung.jpg)
+
+![bungbungchacha](README.assets/pika.png)
 
 
 
