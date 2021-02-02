@@ -14,7 +14,7 @@
 
 ##### 구글 공유폴더
 
-https://drive.google.com/drive/u/0/folders/1UJpes1bR2acDRPCOoPfnlOV9L_ZnLu
+https://drive.google.com/drive/u/0/folders/1UJpes1bR2acDRPCOoPfnlOV9L_ZnLu5s
 
 
 
