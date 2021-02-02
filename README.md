@@ -8,11 +8,15 @@
 
 ## 팀
 
-### 저희멋지조
+<div style="text-align: right;
+            font-size: large;
+            font-weight: bold;">저희멋지조</div>
 
-김지원(팀장) 김보라 박정호 서은상 정은경 최창훈
+<div style="text-align: right;
+            font-size: medium">김지원(팀장) 김보라 박정호 서은상 정은경 최창훈</div>
 
 ![bungbungchacha](./bung.jpg)
+
 
 
 
