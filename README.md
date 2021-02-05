@@ -12,6 +12,12 @@
 - `Web_Framework_Architecture.md`
 	- 개발 프레임워크 설계 정보입니다
 
+#### MASTER계정
+
+- https://github.com/hoon25/EV_ProjectMaster
+
+
+
 ## 팀
 
 ### 저희멋지조
