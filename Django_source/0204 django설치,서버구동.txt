@@ -28,7 +28,8 @@ vi /home/djangoserver/log/server.log
 로그파일 실시간 보기
 tail -f /home/djangoserver/log/server.log
 
-
+사이트 접속
+http://112.147.119.224:8080/
 
 
 
