@@ -16,6 +16,10 @@
 
 https://drive.google.com/drive/u/0/folders/1UJpes1bR2acDRPCOoPfnlOV9L_ZnLu5s
 
+##### Django_souce
+
+Django_source에서 다운받아서 각자 작업폴더에 반영 + 기본세팅 또는 호환성 부분 수정 시 문서화
+
 
 
 ![bungbungchacha](README.assets/bung.jpg)
