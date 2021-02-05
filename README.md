@@ -2,13 +2,15 @@
 
 > 전기차 충전소 위치기반 웹서비스
 
-## DEVELOPER 계정
+## DEVELOPMENT계정
 
 - `Development_Source`디렉토리 내 `evProject` 에서 프로젝트 수행
-- commit할 경우 `CommitMessage_Rule.md` 파일을 읽고 맞춰주세요
-- 주요 (기본세팅/호환성 부분)  추가/수정 시 참고내용 `comment.md`에 편하게 작성해주세요
-
-
+-  `CommitMessage_Rule.md` 
+  - commit 시 파일을 읽고 맞춰주세요
+-  `comment.md`
+  - 주요 (기본세팅/호환성 부분)  추가/수정 시 참고내용을 **편하게** 작성해주세요
+- `Web_Framework_Architecture.md`
+  - 개발 프레임워크 설계 정보입니다
 
 ## 팀
 
