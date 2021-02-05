@@ -4,7 +4,9 @@
 
 ## DEVELOPER 계정
 
-commit할 경우 `CommitMessage_Rule.md` 파일을 읽어주세요
+- `Development_Source`디렉토리 내 `evProject` 에서 프로젝트 수행
+- commit할 경우 `CommitMessage_Rule.md` 파일을 읽고 맞춰주세요
+- 주요 (기본세팅/호환성 부분)  추가/수정 시 참고내용 `comment.md`에 편하게 작성해주세요
 
 
 
@@ -16,13 +18,9 @@ commit할 경우 `CommitMessage_Rule.md` 파일을 읽어주세요
 
 ---
 
-##### 구글 공유폴더
+#### 구글 공유폴더
 
-https://drive.google.com/drive/u/0/folders/1UJpes1bR2acDRPCOoPfnlOV9L_ZnLu5s
-
-##### Django_souce
-
-Django_source에서 다운받아서 각자 작업폴더에 반영 + 기본세팅 또는 호환성 부분 수정 시 문서화
+https://drive.google.com/drive/u/0/folders/1UJpes1bR2acDRPCOoPfnlOV9L_ZnLu5s 
 
 
 

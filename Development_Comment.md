@@ -1,3 +1,17 @@
+# Development Comment
+
+> 개발 과정에서 전달하고 싶은 내용 적어주세요
+
+`---`  로 구별해주세요
+
+
+
+---
+
+#### 0205 최창훈 
+
+##### 네이버 지도 api 기반으로 작업하셔야 하는 팀원분들 참고하세요
+
 네이버 클라우드 application 현황 확인
 https://console.ncloud.com/mc/solution/naverService/application
 
@@ -14,6 +28,30 @@ https://navermaps.github.io/maps.js.ncp/docs/tutorial-2-Getting-Started.html
 https://github.com/navermaps/maps.js.ncp
 
 script 바꿔줘야함 (예제 코드 모음집에서) 
+
 <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=djtsnlvpvb&callback=initMap"></script>
 
-서버에서 로컬로 복사 및 전송
+
+
+##### bootstrap 정보
+
+bootstrap 가져온 사이트 <--- 이걸로 사용 확정
+https://startbootstrap.com/template/simple-sidebar
+
+부트스트랩사용법
+https://tunghs.github.io/2019/09/07/2019-09-07-Apply-Django-Bootstrap/
+
+
+
+---
+
+
+
+
+
+
+
+##### 
+
+
+
