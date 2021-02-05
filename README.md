@@ -2,6 +2,10 @@
 
 > 전기차 충전소 위치기반 웹서비스
 
+## DEVELOPER 계정
+
+commit할 경우 `CommitMessage_Rule.md` 파일을 읽어주세요
+
 
 
 ## 팀
