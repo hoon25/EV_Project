@@ -1,0 +1,19 @@
+네이버 클라우드 application 현황 확인
+https://console.ncloud.com/mc/solution/naverService/application
+
+네이버지도 api 종류 설명
+https://www.ncloud.com/product/applicationService/maps
+
+네이버지도 api 사용 블로그 예제
+https://egg-money.tistory.com/120
+
+네이버지도 api 공식 사용 방법
+https://navermaps.github.io/maps.js.ncp/docs/tutorial-2-Getting-Started.html
+
+네이버 지도 공식 예제 코드 모음집(종류 많음)
+https://github.com/navermaps/maps.js.ncp
+
+script 바꿔줘야함 (예제 코드 모음집에서) 
+<script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=djtsnlvpvb&callback=initMap"></script>
+
+서버에서 로컬로 복사 및 전송
