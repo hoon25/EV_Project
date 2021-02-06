@@ -51,5 +51,5 @@ https://tunghs.github.io/2019/09/07/2019-09-07-Apply-Django-Bootstrap/
 
 ##### develop 브랜치 생성
 
-
+저는 수정을 완료했습니다.(창훈)
 
