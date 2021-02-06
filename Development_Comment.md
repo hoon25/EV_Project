@@ -53,5 +53,7 @@ https://tunghs.github.io/2019/09/07/2019-09-07-Apply-Django-Bootstrap/
 
 저는 수정을 완료했습니다.(창훈)
 
-Update했습니다.(테스트)
+저도 수정했습니다.(충돌 생성)
+
+
 
