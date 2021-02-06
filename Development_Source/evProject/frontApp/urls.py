@@ -5,7 +5,8 @@ from frontApp import views
 
 
 urlpatterns = [
-    path('main/', views.naverMap),
+    path('index/', views.index),
     path('ex1/', views.naverMapEx1),
     path('ex2/', views.naverMapEx2),
+    path('ex3/', views.naverMapEx3),
 ]
