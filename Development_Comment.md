@@ -45,13 +45,11 @@ https://tunghs.github.io/2019/09/07/2019-09-07-Apply-Django-Bootstrap/
 
 ---
 
+#### 0206 최창훈
 
+##### django, mysql 연동완료
 
-
-
-
-
-##### 
+##### develop 브랜치 생성
 
 
 
