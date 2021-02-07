@@ -1,0 +1,11 @@
+- github에서 클론 후 가상환경에서 python(3.8.1) 설치
+  - 가상환경 설정방법 : https://www.daleseo.com/python-venv/
+- pycharm-dbconn 
+  - settings.py에서 database 추가
+  - `python manage.py inspectdb` : db 감지
+  - `python manage.py makemigrations`
+  - `python manage.py migrate`
+  - `python manage.py createsuperuser`
+    - admin
+      - user : ev
+      - pwd : Ev12341234!
