@@ -2,7 +2,7 @@
 
 > 전기차 충전소 위치기반 웹서비스
 
-## DEVELOPMENT계정
+## 문서
 
 - `Development_Source`디렉토리 내 `evProject` 에서 프로젝트 수행
 -  `CommitMessage_Rule.md` 
@@ -12,23 +12,17 @@
 - `Web_Framework_Architecture.md`
 	- 개발 프레임워크 설계 정보입니다
 
-#### MASTER계정
+- 구글 공유폴더
+  - https://drive.google.com/drive/u/0/folders/1UJpes1bR2acDRPCOoPfnlOV9L_ZnLu5s 
 
-- https://github.com/hoon25/EV_ProjectMaster
-
-
+- branch 
+  - master / develop 으로 운영
 
 ## 팀
 
 ### 저희멋지조
 
 김지윤(팀장) 김보라 박정호 서은상 정은경 최창훈
-
----
-
-#### 구글 공유폴더
-
-https://drive.google.com/drive/u/0/folders/1UJpes1bR2acDRPCOoPfnlOV9L_ZnLu5s 
 
 
 
