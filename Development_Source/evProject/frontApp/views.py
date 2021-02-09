@@ -50,15 +50,15 @@ def evclu(request) :
     print('db station', station)
 
     list = []
-    # cnt = 0
+    cnt = 0
     for s in station :
         EvStation.lat = s.lat
         EvStation.lng = s.lng
 
         list.append({'lat' : s.lat , 'lng' : s.lng})
-        # cnt = cnt+1
-        # if cnt ==5 :
-        #     break
+        cnt = cnt+1
+        if cnt ==5 :
+            break
     context = {'station': list}
 
     return render(request, 'naverMapApiEx3.html', context)
