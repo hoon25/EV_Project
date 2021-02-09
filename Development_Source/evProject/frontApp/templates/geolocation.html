@@ -1,75 +1,69 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8">
-    <title>geolocation으로 마커 표시하기</title>
-
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+    <title>간단한 지도 표시하기</title>
+    <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=nery8si7l9"></script>
 </head>
 <body>
-<p style="margin-top:-12px">
-    <b>Chrome 브라우저는 https 환경에서만 geolocation을 지원합니다.</b> 참고해주세요.
-</p>
-<div id="map" style="width:100%;height:350px;"></div>
+<div id="map" style="width:100%;height:400px;"></div>
 
-<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=29db066f8a4257f4bac022c8f19acd16"></script>
 <script>
-var mapContainer = document.getElementById('map'), // 지도를 표시할 div
-    mapOption = {
-        center: new kakao.maps.LatLng(33.450701, 126.570667), // 지도의 중심좌표
-        level: 10 // 지도의 확대 레벨
-    };
+    console.log({{station.lat}})
+    console.log({{station.lng}})
+var map = new naver.maps.Map('map', {
+    center: new naver.maps.LatLng(37.5666805, 126.9784147),
+    zoom: 10,
+    mapTypeId: naver.maps.MapTypeId.NORMAL
+});
 
-var map = new kakao.maps.Map(mapContainer, mapOption); // 지도를 생성합니다
+var marker = new naver.maps.Marker({
+    position: new naver.maps.LatLng(station.lat, station.lng),
+    map: map
+});
 
-// HTML5의 geolocation으로 사용할 수 있는지 확인합니다
-if (navigator.geolocation) {
+var infowindow = new naver.maps.InfoWindow();
 
-    // GeoLocation을 이용해서 접속 위치를 얻어옵니다
-    navigator.geolocation.getCurrentPosition(function(position) {
+function onSuccessGeolocation(position) {
+    var location = new naver.maps.LatLng(position.coords.latitude,
+                                         position.coords.longitude);
 
-        var lat = position.coords.latitude, // 위도
-            lon = position.coords.longitude; // 경도
-        alert(lat);
-        var locPosition = new kakao.maps.LatLng(lat, lon), // 마커가 표시될 위치를 geolocation으로 얻어온 좌표로 생성합니다
-            message = '<div style="padding:5px;">여기에 계신가요?!</div>'; // 인포윈도우에 표시될 내용입니다
+    map.setCenter(location); // 얻은 좌표를 지도의 중심으로 설정합니다.
+    map.setZoom(10); // 지도의 줌 레벨을 변경합니다.
 
-        // 마커와 인포윈도우를 표시합니다
-        displayMarker(locPosition, message);
+    infowindow.setContent('<div style="padding:20px;">' + 'geolocation.getCurrentPosition() 위치' + '</div>');
 
-      });
-
-} else { // HTML5의 GeoLocation을 사용할 수 없을때 마커 표시 위치와 인포윈도우 내용을 설정합니다
-
-    var locPosition = new kakao.maps.LatLng(33.450701, 126.570667),
-        message = 'geolocation을 사용할수 없어요..'
-
-    displayMarker(locPosition, message);
+    infowindow.open(map, location);
+    console.log('Coordinates: ' + location.toString());
 }
 
-// 지도에 마커와 인포윈도우를 표시하는 함수입니다
-function displayMarker(locPosition, message) {
+function onErrorGeolocation() {
+    var center = map.getCenter();
 
-    // 마커를 생성합니다
-    var marker = new kakao.maps.Marker({
-        map: map,
-        position: locPosition
-    });
+    infowindow.setContent('<div style="padding:20px;">' +
+        '<h5 style="margin-bottom:5px;color:#f00;">Geolocation failed!</h5>'+ "latitude: "+ center.lat() +"<br />longitude: "+ center.lng() +'</div>');
 
-    var iwContent = message, // 인포윈도우에 표시할 내용
-        iwRemoveable = true;
-
-    // 인포윈도우를 생성합니다
-    var infowindow = new kakao.maps.InfoWindow({
-        content : iwContent,
-        removable : iwRemoveable
-    });
-
-    // 인포윈도우를 마커위에 표시합니다
-    infowindow.open(map, marker);
-
-    // 지도 중심좌표를 접속위치로 변경합니다
-    map.setCenter(locPosition);
+    infowindow.open(map, center);
 }
+
+$(window).on("load", function() {
+    if (navigator.geolocation) {
+        /**
+         * navigator.geolocation 은 Chrome 50 버젼 이후로 HTTP 환경에서 사용이 Deprecate 되어 HTTPS 환경에서만 사용 가능 합니다.
+         * http://localhost 에서는 사용이 가능하며, 테스트 목적으로, Chrome 의 바로가기를 만들어서 아래와 같이 설정하면 접속은 가능합니다.
+         * chrome.exe --unsafely-treat-insecure-origin-as-secure="http://example.com"
+         */
+        navigator.geolocation.getCurrentPosition(onSuccessGeolocation, onErrorGeolocation);
+    } else {
+        var center = map.getCenter();
+        infowindow.setContent('<div style="padding:20px;"><h5 style="margin-bottom:5px;color:#f00;">Geolocation not supported</h5></div>');
+        infowindow.open(map, center);
+    }
+});
+
 </script>
+
 </body>
 </html>
