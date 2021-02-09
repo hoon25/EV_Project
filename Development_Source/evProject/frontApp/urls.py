@@ -13,5 +13,8 @@ from frontApp import views
 
 urlpatterns = [
     path('evgeolocation/', views.evgeolocation),
+    path('station/', views.station, name = 'station'),
+    path('station_search/', views.stationSearch, name = 'stationSearch'),
+
 
 ]
