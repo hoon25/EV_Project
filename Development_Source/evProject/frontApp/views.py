@@ -1,66 +1,70 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render
 from django.http import JsonResponse
 from .models import *
 
+from django.core import serializers
+from django.http import HttpResponse
+
 # Create your views here.
 
-# 현재 내위치 표시
-def myloc(request) :
-    print('request mylocation - ')
-    return render(request,'geo_2.html')
+# select * from table ;
+# -> modelName.objects.all()
 
-def evloc(request) :
-    print('request evloc - ')
-    # return render(request,'naverMapApiEx1.html')
-    # 35.5889950493
-    # 129.3644580288
-    # select * from EvStation where lat = ? and lng ?
-    station = EvStation.objects.get(evsn=1)
-    print('db station' , station)
-    context = {'station' : station}
-    return render(request,'naverMapApiEx1.html', context)
+# select * from table where id = xxxx and pwd = xxxx;
+# -> modelName.objects.get(id = xxxx, pwd = xxxx)
+# -> modelName.objects.filter(id = xxxx, pwd = xxxx)
 
-# def evloc(request) :
-#     print('request evloc - ')
-#     station = EvStation.objects.all()
-#     print('db station' , station)
-#     context = {'station' : station}
-#     return render(request,'naverMapApiEx1.html', context)
+# select * from table where id = xxxx or pwd = xxxx;
+# -> modelName.objects.filter(Q(id = xxxx) | Q(pwd = xxxx))
 
-# def locall(request) :
-#     print('request locall - ')
-#     station = EvStation.objects.all()
-#     print('db station', station)
-#     context = {'station': station}
-#     return render(request, 'naverMapApiEx1.html', context)
-    # return render(request, 'cluster.html')
+# select * from table where subject like '%공지%'
+# -> modelName.objects.filter(subject__icontains = '공지')
+# select * from table where subject like '공지%'
+# -> modelName.objects.filter(subject__startswith = '공지')
+# select * from table where subject like '%공지'
+# -> modelName.objects.filter(subject__endswith = '공지')
 
-# def locall(request) :
-#     print('request locall - ')
-#     return render(request, 'cluster.html')
+# insert into table values()
+# model(attr=value, attr = value)
+# model.save()
 
-def evclu(request) :
-    print('request evclu - ')
-    station = EvStation.objects.all()
-    # print('db station' , station)
-    # context = {'station' : station}
-    # return render(request,'naverMapApiEx3.html', context)
+# delete * from tableName where id = xxxx
+# -> modelName.objects.get(id=xxx).delete()
 
-    # station = EvStation.objects.get(evsn=1)
-    print('db station', station)
+# update tableName set attr = value where id = xxxxx
+# obj = modelName.objects.get(id=xxxxx)
+# obj.attr = value
+# obj.save() -- commit
+
+def evgeolocation(request) :
+    print('request evgeolocation - ')
+    return render(request,'geolocation.html')
+
+def station(request):
+    print("check station load")
+    return render(request, 'naversearch.html')
+
+def stationSearch(request):
+    type = request.POST['type']
+    keyword = request.POST['keyword']
+    # print("Check Post -", type, keyword)
+
+    if type == 'statnm':
+        stations = EvStation.objects.filter(statnm__icontains = keyword)
+    elif type == 'addr':
+        stations = EvStation.objects.filter(addr__icontains = keyword)
 
     list = []
-    cnt = 0
-    for s in station :
-        EvStation.lat = s.lat
-        EvStation.lng = s.lng
+    for station in stations:
+        list.append({
+            'statnm' : station.statnm, 'addr': station.addr, 'lat' : station.lat, 'lng' : station.lng,
+        })
+    for a in list:
+        print("check - ", a)
+    return JsonResponse(list, safe = False)
 
-        list.append({'lat' : s.lat , 'lng' : s.lng})
-        cnt = cnt+1
-        if cnt ==5 :
-            break
-    context = {'station': list}
 
-    return render(request, 'naverMapApiEx3.html', context)
-    # return render(request,'naverMapApiEx3.html')
+
+
+
 

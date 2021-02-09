@@ -4,11 +4,17 @@ from django.urls import path, include
 from frontApp import views
 
 
+# urlpatterns = [
+#     path('index/', views.index),
+#     path('ex1/', views.naverMapEx1),
+#     path('ex2/', views.naverMapEx2),
+#     path('ex3/', views.naverMapEx3),
+# ]
 
 urlpatterns = [
-    path('myloc/', views.myloc),
-    # path('evloc/', views.evloc),
-    # path('locall/', views.locall),
-    path('evclu/', views.evclu),
+    path('evgeolocation/', views.evgeolocation),
+    path('station/', views.station, name = 'station'),
+    path('station_search/', views.stationSearch, name = 'stationSearch'),
+
 
 ]
