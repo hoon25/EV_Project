@@ -11,9 +11,9 @@
 <body>
 <div class = 'search'>
     <button id='evBtn'>충전소 보기</button>
-    <div id="distance"></div>
 </div>
-    <div id="map" style="width:100%;height:600px;"></div>
+</div>
+    <div id="map" style="width:100%;height:600px;" ></div>
 
 
 <script  src="http://code.jquery.com/jquery-latest.min.js"></script>
@@ -21,35 +21,40 @@
 
 $(document).ready(function(){
     $('#evBtn').click(function(){
-        var stName = '종묘 공영주차장'
-        var distance = '0.057369362071630854'
+        console.log(user_lat)
+        console.log(user_lng)
         $.ajax({
             url : "{% url 'evSearch' %}",
             type : "post",
             data : {"csrfmiddlewaretoken" : '{{csrf_token}}',
-						type : stName,
-						distance : distance},
+						lat : user_lat,
+						lng : user_lng},
             dataType : 'json',
             success : function(data){
                 alert(data)
-                $.each(data, function(idx, obj,distance){
-                    var marker = new naver.maps.Marker({
-                        position: new naver.maps.LatLng(obj.lat, obj.lng),
-                        map: map
-                    });
-            function showMarker(map, marker) {
-
-                if (marker.getMap()) return;
-                marker.setMap(map);
-            }
-
-            function hideMarker(map, marker) {
-
-                if (!marker.getMap()) return;
-                marker.setMap(null);
-            }
-
-
+                var markers = $(data).map(function(i,position){
+                    $.each(data, function(idx, obj){
+                        var marker = new naver.maps.Marker({
+                            position: new naver.maps.LatLng(obj.lat, obj.lng),
+                            map: map
+                        });
+                        var content = '<div style="padding:5px;">'
+                                       +obj.statNm+'<br/>'
+                                       +obj.addr+'<br/>'
+                                       +obj.useTime+'<br/>'
+                                       +obj.stat+'<br/>'
+                                       '</div>'
+<!--                                        objRemoveable = true;-->
+                        var infowindow = new naver.maps.InfoWindow({
+                            content : content
+    <!--                        removeable : objRemoveable-->
+                        });
+                        naver.maps.Event.addListener(marker,'click',function(){
+                        infowindow.open(map, marker)
+<!--                        navigator.geolocation.getCurrentPosition(onSuccessGeolocation, onErrorGeolocation);-->
+                        });
+                        return marker;
+                    })
                 })
             }
         })
@@ -57,7 +62,7 @@ $(document).ready(function(){
 })
 
 var map = new naver.maps.Map('map', {
-    center: new naver.maps.LatLng(navigator.geolocation),
+    center: new naver.maps.LatLng(location),
     zoom: 10,
     minZoom: 10
 });
@@ -65,26 +70,15 @@ var map = new naver.maps.Map('map', {
 
 
 
-<!--var MARKER_SPRITE_X_OFFSET = 29,-->
-<!--    MARKER_SPRITE_Y_OFFSET = 50,-->
-<!--    MARKER_SPRITE_POSITION = {-->
-<!--        "A0": [0, 0],-->
-<!--        "B0": [MARKER_SPRITE_X_OFFSET, 0],-->
-<!--        "C0": [MARKER_SPRITE_X_OFFSET*2, 0],-->
-<!--        "D0": [MARKER_SPRITE_X_OFFSET*3, 0],-->
-<!--        "E0": [MARKER_SPRITE_X_OFFSET*4, 0],-->
-<!--        "F0": [MARKER_SPRITE_X_OFFSET*5, 0],-->
-<!--        "G0": [MARKER_SPRITE_X_OFFSET*6, 0],-->
-<!--        "H0": [MARKER_SPRITE_X_OFFSET*7, 0],-->
-<!--        "I0": [MARKER_SPRITE_X_OFFSET*8, 0]-->
-<!--        }-->
-
-
 var infowindow = new naver.maps.InfoWindow();
-
+user_lat = ""
+user_lng = ""
 function onSuccessGeolocation(position) {
+    user_lat = position.coords.latitude
+    user_lng = position.coords.longitude
     var location = new naver.maps.LatLng(position.coords.latitude,
                                          position.coords.longitude);
+    alert(location)
 
     map.setCenter(location); // 얻은 좌표를 지도의 중심으로 설정합니다.
     map.setZoom(12); // 지도의 줌 레벨을 변경합니다.
@@ -112,6 +106,11 @@ $(window).on("load", function() {
         infowindow.setContent('<div style="padding:20px;"><h5 style="margin-bottom:5px;color:#f00;">Geolocation not supported</h5></div>');
         infowindow.open(map, center);
     }
+
+
+
+
+
 });
 
 

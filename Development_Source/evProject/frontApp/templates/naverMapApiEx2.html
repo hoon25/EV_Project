@@ -4,112 +4,116 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
-    <title>간단한 지도 표시하기</title>
-    <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=djtsnlvpvb"></script>
+    <title>GPS 기반 반경 2Km 이내 전기차 충전소 위치표시</title>
+    <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=nery8si7l9"></script>
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+    <script src="http://apis.data.go.kr/B552584/EvCharger/getChargerStatus?serviceKey=W12T9eD9MqXAFTNpc13THVqfMuG%2FpLnHxnqz33zNg8XRsnB6kq1Zm054cn8XrwTxqRVFBJ%2FjdB2nXKxHhwxavw%3D%3D&pageNo="></script>
 </head>
 <body>
-<div id="map" style="width:100%;height:800px;"></div>
+<div class = 'search'>
+    <button id='evBtn'>충전소 보기</button>
+</div>
+    <div id="map" style="width:100%;height:600px;"></div>
+
 
 <script  src="http://code.jquery.com/jquery-latest.min.js"></script>
 <script>
-<!--var HOME_PATH = window.HOME_PATH || '.';-->
-var MARKER_SPRITE_X_OFFSET = 29,
-    MARKER_SPRITE_Y_OFFSET = 50,
-    MARKER_SPRITE_POSITION = {
-        "A0": [0, 0],
-        "B0": [MARKER_SPRITE_X_OFFSET, 0],
-        "C0": [MARKER_SPRITE_X_OFFSET*2, 0],
-        "D0": [MARKER_SPRITE_X_OFFSET*3, 0],
-        "E0": [MARKER_SPRITE_X_OFFSET*4, 0],
-        "F0": [MARKER_SPRITE_X_OFFSET*5, 0],
-        "G0": [MARKER_SPRITE_X_OFFSET*6, 0],
-        "H0": [MARKER_SPRITE_X_OFFSET*7, 0],
-        "I0": [MARKER_SPRITE_X_OFFSET*8, 0]
 
-<!--        "A1": [0, MARKER_SPRITE_Y_OFFSET],-->
-<!--        "B1": [MARKER_SPRITE_X_OFFSET, MARKER_SPRITE_Y_OFFSET],-->
-<!--        "C1": [MARKER_SPRITE_X_OFFSET*2, MARKER_SPRITE_Y_OFFSET],-->
-<!--        "D1": [MARKER_SPRITE_X_OFFSET*3, MARKER_SPRITE_Y_OFFSET],-->
-<!--        "E1": [MARKER_SPRITE_X_OFFSET*4, MARKER_SPRITE_Y_OFFSET],-->
-<!--        "F1": [MARKER_SPRITE_X_OFFSET*5, MARKER_SPRITE_Y_OFFSET],-->
-<!--        "G1": [MARKER_SPRITE_X_OFFSET*6, MARKER_SPRITE_Y_OFFSET],-->
-<!--        "H1": [MARKER_SPRITE_X_OFFSET*7, MARKER_SPRITE_Y_OFFSET],-->
-<!--        "I1": [MARKER_SPRITE_X_OFFSET*8, MARKER_SPRITE_Y_OFFSET],-->
 
-<!--        "A2": [0, MARKER_SPRITE_Y_OFFSET*2],-->
-<!--        "B2": [MARKER_SPRITE_X_OFFSET, MARKER_SPRITE_Y_OFFSET*2],-->
-<!--        "C2": [MARKER_SPRITE_X_OFFSET*2, MARKER_SPRITE_Y_OFFSET*2],-->
-<!--        "D2": [MARKER_SPRITE_X_OFFSET*3, MARKER_SPRITE_Y_OFFSET*2],-->
-<!--        "E2": [MARKER_SPRITE_X_OFFSET*4, MARKER_SPRITE_Y_OFFSET*2],-->
-<!--        "F2": [MARKER_SPRITE_X_OFFSET*5, MARKER_SPRITE_Y_OFFSET*2],-->
-<!--        "G2": [MARKER_SPRITE_X_OFFSET*6, MARKER_SPRITE_Y_OFFSET*2],-->
-<!--        "H2": [MARKER_SPRITE_X_OFFSET*7, MARKER_SPRITE_Y_OFFSET*2],-->
-<!--        "I2": [MARKER_SPRITE_X_OFFSET*8, MARKER_SPRITE_Y_OFFSET*2]-->
-    };
+$(document).ready(function(){
+    $('#evBtn').click(function(){
+        var stName = '종묘 공영주차장'
+        $.ajax({
+            url : "{% url 'evSearch' %}",
+            type : "post",
+            data : {"csrfmiddlewaretoken" : '{{csrf_token}}',
+						type : 'statnm'},
+            dataType : 'json',
+            success : function(data){
+                alert(data)
+                $.each(data, function(idx, obj){
+                    var marker = new naver.maps.Marker({
+                        position: new naver.maps.LatLng(obj.lat, obj.lng),
+                        map: map
+                    });
+            function showMarker(map, marker) {
+
+                if (marker.getMap()) return;
+                marker.setMap(map);
+            }
+
+            function hideMarker(map, marker) {
+
+                if (!marker.getMap()) return;
+                marker.setMap(null);
+            }
+
+
+                })
+            }
+        })
+    })
+})
 
 var map = new naver.maps.Map('map', {
-    center: new naver.maps.LatLng(37.3595704, 127.105399),
-    zoom: 10
+    center: new naver.maps.LatLng(navigator.geolocation),
+    zoom: 10,
+    minZoom: 10
 });
 
-var bounds = map.getBounds(),
-    southWest = bounds.getSW(),
-    northEast = bounds.getNE(),
-    lngSpan = northEast.lng() - southWest.lng(),
-    latSpan = northEast.lat() - southWest.lat();
 
-var markers = [];
 
-for (var key in MARKER_SPRITE_POSITION) {
 
-    var position = new naver.maps.LatLng(
-        southWest.lat() + latSpan * Math.random(),
-        southWest.lng() + lngSpan * Math.random());
+<!--var MARKER_SPRITE_X_OFFSET = 29,-->
+<!--    MARKER_SPRITE_Y_OFFSET = 50,-->
+<!--    MARKER_SPRITE_POSITION = {-->
+<!--        "A0": [0, 0],-->
+<!--        "B0": [MARKER_SPRITE_X_OFFSET, 0],-->
+<!--        "C0": [MARKER_SPRITE_X_OFFSET*2, 0],-->
+<!--        "D0": [MARKER_SPRITE_X_OFFSET*3, 0],-->
+<!--        "E0": [MARKER_SPRITE_X_OFFSET*4, 0],-->
+<!--        "F0": [MARKER_SPRITE_X_OFFSET*5, 0],-->
+<!--        "G0": [MARKER_SPRITE_X_OFFSET*6, 0],-->
+<!--        "H0": [MARKER_SPRITE_X_OFFSET*7, 0],-->
+<!--        "I0": [MARKER_SPRITE_X_OFFSET*8, 0]-->
+<!--        }-->
 
-    var marker = new naver.maps.Marker({
-        map: map,
-        position: position,
-        title: key,
-        zIndex: 100
-    });
 
-    markers.push(marker);
-};
+var infowindow = new naver.maps.InfoWindow();
 
-naver.maps.Event.addListener(map, 'idle', function() {
-    updateMarkers(map, markers);
-});
+function onSuccessGeolocation(position) {
+    var location = new naver.maps.LatLng(position.coords.latitude,
+                                         position.coords.longitude);
 
-function updateMarkers(map, markers) {
+    map.setCenter(location); // 얻은 좌표를 지도의 중심으로 설정합니다.
+    map.setZoom(12); // 지도의 줌 레벨을 변경합니다.
 
-    var mapBounds = map.getBounds();
-    var marker, position;
+    infowindow.setContent('<div style="padding:20px;">' + '내 위치' + '</div>');
 
-    for (var i = 0; i < markers.length; i++) {
+    infowindow.open(map, location);
+    console.log('Coordinates: ' + location.toString());
+}
 
-        marker = markers[i]
-        position = marker.getPosition();
+function onErrorGeolocation() {
+    var center = map.getCenter();
 
-        if (mapBounds.hasLatLng(position)) {
-            showMarker(map, marker);
-        } else {
-            hideMarker(map, marker);
-        }
+    infowindow.setContent('<div style="padding:20px;">' +
+        '<h5 style="margin-bottom:5px;color:#f00;">Geolocation failed!</h5>'+ "latitude: "+ center.lat() +"<br />longitude: "+ center.lng() +'</div>');
+
+    infowindow.open(map, center);
+}
+
+$(window).on("load", function() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(onSuccessGeolocation, onErrorGeolocation);
+    } else {
+        var center = map.getCenter();
+        infowindow.setContent('<div style="padding:20px;"><h5 style="margin-bottom:5px;color:#f00;">Geolocation not supported</h5></div>');
+        infowindow.open(map, center);
     }
-}
+});
 
-function showMarker(map, marker) {
 
-    if (marker.getMap()) return;
-    marker.setMap(map);
-}
-
-function hideMarker(map, marker) {
-
-    if (!marker.getMap()) return;
-    marker.setMap(null);
-}
 </script>
-
 </body>
-
+</html>
