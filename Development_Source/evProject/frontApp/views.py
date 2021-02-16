@@ -113,23 +113,6 @@ def stationSearch(request):
             connection.commit()
             connection.close()
 
-            list = []
-            cnt = 0
-            for station in stations:
-                row = {'statnm': station[0],
-                       'addr': station[1],
-                       'lat': station[2],
-                       'lng': station[3],
-                       'useTime': station[4],
-                       'busicall': station[5],
-                       'info': station[6]}
-                list.append(row)
-                cnt += 1
-                if cnt == 100:
-                    break
-            for a in list:
-                print("check - ", a)
-            print(len(list))
         except:
             connection.rollback()
             print('Failed selecting in stations')
@@ -151,38 +134,27 @@ def stationSearch(request):
 
             connection.commit()
             connection.close()
-
-            list = []
-            cnt = 0
-            for station in stations:
-                row = {'statnm': station[0],
-                       'addr': station[1],
-                       'lat': station[2],
-                       'lng': station[3],
-                       'useTime': station[4],
-                       'busicall': station[5],
-                       'info': station[6]}
-                list.append(row)
-                cnt += 1
-                if cnt == 100:
-                    break
-            for a in list:
-                print("check - ", a)
-            print(len(list))
         except:
             connection.rollback()
             print('Failed selecting in stations')
     list = []
     cnt = 0
     for station in stations:
-        list.append({
-            'statnm': station.statnm, 'addr': station.addr, 'lat': station.lat, 'lng': station.lng,
-        })
-        cnt = cnt + 1
-        if cnt == 5:
+        row = {'statnm': station[0],
+               'addr': station[1],
+               'lat': station[2],
+               'lng': station[3],
+               'useTime': station[4],
+               'busicall': station[5],
+               'info': station[6]}
+        list.append(row)
+        cnt += 1
+        if cnt == 100:
             break
     for a in list:
         print("check - ", a)
+    print(len(list))
+
     return JsonResponse(list, safe=False)
 
 
