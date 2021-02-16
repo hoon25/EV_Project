@@ -8,11 +8,14 @@ from django.db import connection
 from frontApp.getApi.directionApi import getDirectionApi # 네이버지도 길찾기
 from frontApp.getApi.geocodeApi import getGeocode # 네이버 주소 기반 좌표반환
 
-
+def home(request) :
+    print('request home - ')
+    return render(request,'header.html')
 
 def mygps(request) :
     print('request mygps - ')
     return render(request,'geo_2.html')
+
 def evSearch(request) :
     if request.method == 'POST':
         user_lat = request.POST['lat']
