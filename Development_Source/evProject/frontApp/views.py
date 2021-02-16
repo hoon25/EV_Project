@@ -229,5 +229,7 @@ def stationDetail(request):
 
     return render(request, 'stationDetail.html')
 
+def content_recommendation(request):
+    return render(request, 'ContentRecommendation.html')
 
 
