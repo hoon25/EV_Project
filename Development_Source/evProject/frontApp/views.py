@@ -3,8 +3,6 @@ from django.http import JsonResponse
 
 from .models import *
 from django.db import connection
-import math
-from haversine import haversine, Unit
 
 
 from frontApp.getApi.directionApi import getDirectionApi # 네이버지도 길찾기
@@ -15,23 +13,12 @@ from frontApp.getApi.geocodeApi import getGeocode # 네이버 주소 기반 좌�
 def mygps(request) :
     print('request mygps - ')
     return render(request,'geo_2.html')
-
-
 def evSearch(request) :
     if request.method == 'POST':
         user_lat = request.POST['lat']
         user_lng = request.POST['lng']
     try:
         cursor = connection.cursor()
-        # strSql = "SELECT DISTINCT statNm,addr,lat,lng,useTime,powerType,stat,chgerType,codeName,\
-        #             (6371*acos(cos(radians("+user_lat+"))*cos(radians(lat))*cos(radians(lng)-radians("+user_lng+"))+sin(radians("+user_lat+"))*sin(radians(lat))))AS distance \
-        #             FROM ev_station E \
-        #             JOIN ev_station_status S ON(E.evsn = S.evsn) \
-        #             JOIN ev_station_chgertype C ON(E.evsn = C.evsn) \
-        #             JOIN ev_code_inf I ON(S.stat = I.codeId) \
-        #             HAVING distance <= 2 \
-        #             ORDER BY distance"
-
         strSql = "select evst.statNm,evst.addr,evst.lat,evst.lng,evst.useTime,evst.busiCall,descInfo,congestion, \
                 (6371*acos(cos(radians("+user_lat+"))*cos(radians(evst.lat))*cos(radians(evst.lng)-radians("+user_lng+"))+sin(radians("+user_lat+"))*sin(radians(evst.lat))))AS distance \
                 from ev_station evst \
@@ -46,45 +33,67 @@ def evSearch(request) :
                 where evst.evSn = info.evSn \
                 HAVING distance <= 2 \
                 ORDER BY distance;"
-
         result = cursor.execute(strSql)
         stations = cursor.fetchall()
         print('stations - ', stations)
-
         connection.commit()
         connection.close()
         list = []
-        cnt = 0
+        # cnt = 0
         for station in stations:
+            conlevel = ""
+            if station[7]<0.5 :
+                conlevel = 'green-dot.png'
+                print(conlevel)
+            elif station[7]<0.99 :
+                conlevel = 'yellow-dot.png'
+                print(conlevel)
+            else:
+                conlevel = 'red-dot.png'
+                print(conlevel)
             row = {'statNm': station[0],
                    'addr': station[1],
                    'lat': station[2],
                    'lng': station[3],
-                   'useTime' : station[4],
-                   'busiCall' : station[5],
-                   'descInfo' : station[6],
-                   'congestion' : station[7],
-                   'distance': station[8]}
+                   'useTime': station[4],
+                   'busiCall': station[5],
+                   'descInfo': station[6],
+                   'congestion': station[7],
+                   'distance': station[8] ,
+                   'conlevel': conlevel}
             list.append(row)
-            if station[7]<0.5 :
-                context = {'congestion': '한산'}
-                print('한산')
-            elif station[7]<0.99 :
-                context = {'congestion': '보통'}
-                print('보통')
-            else:
-                context = {'congestion': '복잡'}
-                print('복잡')
-            cnt = cnt + 1
-            if cnt == 5 :
-              break
+            # cnt = cnt + 1
+            # if cnt == 5 :
+            #   break
         for a in list:
             print("check - ", a)
     except :
         connection.rollback()
         print('Failed selecting in stations')
     return JsonResponse(list, safe=False)
-
+def station(request):
+    print("check station load")
+    return render(request, 'naversearch.html')
+def stationSearch(request):
+    type = request.POST['type']
+    keyword = request.POST['keyword']
+    # print("Check Post -", type, keyword)
+    if type == 'statnm':
+        stations = EvStation.objects.filter(statnm__icontains = keyword)
+    elif type == 'addr':
+        stations = EvStation.objects.filter(addr__icontains = keyword)
+    list = []
+    cnt = 0
+    for station in stations:
+        list.append({
+            'statnm' : station.statnm, 'addr': station.addr, 'lat' : station.lat, 'lng' : station.lng,
+        })
+        cnt = cnt + 1
+        if cnt == 5 :
+            break
+    for a in list:
+        print("check - ", a)
+    return JsonResponse(list, safe = False)
 
 
 def station(request):

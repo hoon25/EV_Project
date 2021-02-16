@@ -1,6 +1,4 @@
 {% load static %}
-
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -18,12 +16,9 @@
 </div>
 </div>
     <div id="map" style="width:100%;height:600px;" ></div>
-
 <!--{% for station in stations %}-->
 <!--{% endfor %}-->
 <script>
-
-
 $(document).ready(function(){
     $('#evBtn').click(function(){
         console.log(user_lat)
@@ -32,8 +27,8 @@ $(document).ready(function(){
             url : "{% url 'evSearch' %}",
             type : "post",
             data : {"csrfmiddlewaretoken" : '{{csrf_token}}',
-						lat : user_lat,
-						lng : user_lng},
+                  lat : user_lat,
+                  lng : user_lng},
             dataType : 'json',
             success : function(data){
                     var markers = $(data).map(function(i,position){
@@ -83,17 +78,11 @@ $(document).ready(function(){
         })
     })
 })
-
-
 var map = new naver.maps.Map('map', {
     center: new naver.maps.LatLng(location),
     zoom: 10,
     minZoom: 10
 });
-
-
-
-
 var infowindow = new naver.maps.InfoWindow();
 user_lat = ""
 user_lng = ""
@@ -103,25 +92,18 @@ function onSuccessGeolocation(position) {
     var location = new naver.maps.LatLng(position.coords.latitude,
                                          position.coords.longitude);
 <!--    alert(location)-->
-
     map.setCenter(location); // 얻은 좌표를 지도의 중심으로 설정합니다.
     map.setZoom(14); // 지도의 줌 레벨을 변경합니다.
-
     infowindow.setContent('<div style="padding:10px;">' + '내 위치' + '</div>');
-
     infowindow.open(map, location);
     console.log('Coordinates: ' + location.toString());
 }
-
 function onErrorGeolocation() {
     var center = map.getCenter();
-
     infowindow.setContent('<div style="padding:20px;">' +
         '<h5 style="margin-bottom:5px;color:#f00;">Geolocation failed!</h5>'+ "latitude: "+ center.lat() +"<br />longitude: "+ center.lng() +'</div>');
-
     infowindow.open(map, center);
 }
-
 $(window).on("load", function() {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(onSuccessGeolocation, onErrorGeolocation);
@@ -130,10 +112,7 @@ $(window).on("load", function() {
         infowindow.setContent('<div style="padding:20px;"><h5 style="margin-bottom:5px;color:#f00;">Geolocation not supported</h5></div>');
         infowindow.open(map, center);
     }
-
 });
-
-
 </script>
 </body>
 </html>

@@ -4,8 +4,10 @@ from django.urls import path, include
 from frontApp import views
 
 urlpatterns = [
+    # 현재위치 기반 반경 2KM 이내에 존재하는 충전소 표시(정은경
     path('mygps/', views.mygps,name='mygps'),
     path('evSearch/', views.evSearch, name='evSearch'),
+    #
     path('station/', views.station, name = 'station'),
     path('station_search/', views.stationSearch, name = 'stationSearch'),
     path('direction/', views.direction, name = 'diretion'),
