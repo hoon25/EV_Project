@@ -19,8 +19,10 @@
 </div>
     <div id="map" style="width:100%;height:600px;" ></div>
 
-
+<!--{% for station in stations %}-->
+<!--{% endfor %}-->
 <script>
+
 
 $(document).ready(function(){
     $('#evBtn').click(function(){
@@ -36,12 +38,27 @@ $(document).ready(function(){
             success : function(data){
                     var markers = $(data).map(function(i,position){
                         $.each(data, function(idx, obj){
-                            var marker = new naver.maps.Marker({
+                            if (obj.conlevel == 'green-dot.png') {
+                                var marker = new naver.maps.Marker({
                                 position: new naver.maps.LatLng(obj.lat, obj.lng),
                                 map: map,
-                                title: '한산',
                                 icon: "{% static '/img/green-dot.png' %}"
-                            });
+                                });
+                            }
+                            if (obj.conlevel == 'yellow-dot.png') {
+                                var marker = new naver.maps.Marker({
+                                position: new naver.maps.LatLng(obj.lat, obj.lng),
+                                map: map,
+                                icon: "{% static '/img/yellow-dot.png' %}"
+                                });
+                            }
+                            if (obj.conlevel == 'red-dot.png') {
+                                var marker = new naver.maps.Marker({
+                                position: new naver.maps.LatLng(obj.lat, obj.lng),
+                                map: map,
+                                icon: "{% static '/img/red-dot.png' %}"
+                                });
+                            }
                         var content = '<div style="padding:5px;">'
                                        +'충전소명 : '+obj.statNm+'<br/>'
                                        +'주소 : '+obj.addr+'<br/>'
@@ -85,10 +102,10 @@ function onSuccessGeolocation(position) {
     user_lng = position.coords.longitude
     var location = new naver.maps.LatLng(position.coords.latitude,
                                          position.coords.longitude);
-    alert(location)
+<!--    alert(location)-->
 
     map.setCenter(location); // 얻은 좌표를 지도의 중심으로 설정합니다.
-    map.setZoom(12); // 지도의 줌 레벨을 변경합니다.
+    map.setZoom(14); // 지도의 줌 레벨을 변경합니다.
 
     infowindow.setContent('<div style="padding:10px;">' + '내 위치' + '</div>');
 
@@ -113,10 +130,6 @@ $(window).on("load", function() {
         infowindow.setContent('<div style="padding:20px;"><h5 style="margin-bottom:5px;color:#f00;">Geolocation not supported</h5></div>');
         infowindow.open(map, center);
     }
-
-
-
-
 
 });
 
