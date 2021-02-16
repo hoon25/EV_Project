@@ -71,29 +71,7 @@ def evSearch(request) :
         connection.rollback()
         print('Failed selecting in stations')
     return JsonResponse(list, safe=False)
-def station(request):
-    print("check station load")
-    return render(request, 'naversearch.html')
-def stationSearch(request):
-    type = request.POST['type']
-    keyword = request.POST['keyword']
-    # print("Check Post -", type, keyword)
-    if type == 'statnm':
-        stations = EvStation.objects.filter(statnm__icontains = keyword)
-    elif type == 'addr':
-        stations = EvStation.objects.filter(addr__icontains = keyword)
-    list = []
-    cnt = 0
-    for station in stations:
-        list.append({
-            'statnm' : station.statnm, 'addr': station.addr, 'lat' : station.lat, 'lng' : station.lng,
-        })
-        cnt = cnt + 1
-        if cnt == 5 :
-            break
-    for a in list:
-        print("check - ", a)
-    return JsonResponse(list, safe = False)
+
 
 
 def station(request):
