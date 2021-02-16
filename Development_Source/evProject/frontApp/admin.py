@@ -14,3 +14,4 @@ admin.site.register(MyEvList)
 admin.site.register(RegionCode)
 admin.site.register(UserCar)
 admin.site.register(UserInfo)
+

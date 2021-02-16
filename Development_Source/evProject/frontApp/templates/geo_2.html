@@ -1,0 +1,126 @@
+{% load static %}
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+    <title>GPS 기반 반경 2Km 이내 전기차 충전소 위치표시</title>
+    <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=nery8si7l9"></script>
+    <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+</head>
+<body>
+<div class = 'search'>
+    <button id='evBtn'>충전소 보기</button>
+</div>
+</div>
+    <div id="map" style="width:100%;height:600px;" ></div>
+
+
+<script>
+
+$(document).ready(function(){
+    $('#evBtn').click(function(){
+        console.log(user_lat)
+        console.log(user_lng)
+        $.ajax({
+            url : "{% url 'evSearch' %}",
+            type : "post",
+            data : {"csrfmiddlewaretoken" : '{{csrf_token}}',
+						lat : user_lat,
+						lng : user_lng},
+            dataType : 'json',
+            success : function(data){
+                    var markers = $(data).map(function(i,position){
+                        $.each(data, function(idx, obj){
+                            var marker = new naver.maps.Marker({
+                                position: new naver.maps.LatLng(obj.lat, obj.lng),
+                                map: map,
+                                title: '한산',
+                                icon: "{% static '/img/green-dot.png' %}"
+                            });
+                        var content = '<div style="padding:5px;">'
+                                       +'충전소명 : '+obj.statNm+'<br/>'
+                                       +'주소 : '+obj.addr+'<br/>'
+                                       +'이용가능시간 : '+obj.useTime+'<br/>'
+                                       +'연락처 : '+obj.busiCall+'<br/>'
+                                       +'충전기 : '+obj.descInfo+'<br/>'
+                                       +'혼잡도 : '+obj.congestion+'<br/>'
+                                       '</div>'
+<!--                                        objRemoveable = true;-->
+                        var infowindow = new naver.maps.InfoWindow({
+                            content : content
+    <!--                        removeable : objRemoveable-->
+                        });
+                        naver.maps.Event.addListener(marker,'click',function(){
+                        infowindow.open(map, marker)
+<!--                        navigator.geolocation.getCurrentPosition(onSuccessGeolocation, onErrorGeolocation);-->
+                        });
+                        return marker;
+                    })
+                })
+            }
+        })
+    })
+})
+
+
+var map = new naver.maps.Map('map', {
+    center: new naver.maps.LatLng(location),
+    zoom: 10,
+    minZoom: 10
+});
+
+
+
+
+var infowindow = new naver.maps.InfoWindow();
+user_lat = ""
+user_lng = ""
+function onSuccessGeolocation(position) {
+    user_lat = position.coords.latitude
+    user_lng = position.coords.longitude
+    var location = new naver.maps.LatLng(position.coords.latitude,
+                                         position.coords.longitude);
+    alert(location)
+
+    map.setCenter(location); // 얻은 좌표를 지도의 중심으로 설정합니다.
+    map.setZoom(12); // 지도의 줌 레벨을 변경합니다.
+
+    infowindow.setContent('<div style="padding:10px;">' + '내 위치' + '</div>');
+
+    infowindow.open(map, location);
+    console.log('Coordinates: ' + location.toString());
+}
+
+function onErrorGeolocation() {
+    var center = map.getCenter();
+
+    infowindow.setContent('<div style="padding:20px;">' +
+        '<h5 style="margin-bottom:5px;color:#f00;">Geolocation failed!</h5>'+ "latitude: "+ center.lat() +"<br />longitude: "+ center.lng() +'</div>');
+
+    infowindow.open(map, center);
+}
+
+$(window).on("load", function() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(onSuccessGeolocation, onErrorGeolocation);
+    } else {
+        var center = map.getCenter();
+        infowindow.setContent('<div style="padding:20px;"><h5 style="margin-bottom:5px;color:#f00;">Geolocation not supported</h5></div>');
+        infowindow.open(map, center);
+    }
+
+
+
+
+
+});
+
+
+</script>
+</body>
+</html>
