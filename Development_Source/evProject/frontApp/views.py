@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 from django.http import JsonResponse
 
 from .models import *
@@ -8,14 +8,11 @@ from django.db import connection
 from frontApp.getApi.directionApi import getDirectionApi # 네이버지도 길찾기
 from frontApp.getApi.geocodeApi import getGeocode # 네이버 주소 기반 좌표반환
 
-def home(request) :
-    print('request home - ')
-    return render(request,'header.html')
+
 
 def mygps(request) :
     print('request mygps - ')
     return render(request,'geo_2.html')
-
 def evSearch(request) :
     if request.method == 'POST':
         user_lat = request.POST['lat']
@@ -222,4 +219,61 @@ def stationDetail(request):
 def content_recommendation(request):
     return render(request, 'ContentRecommendation.html')
 
+#홈페이지
 
+def index(request):
+    if request.session.get('user_id') and request.session.get('user_name'):
+        context = {'id' : request.session['user_id'],
+                   'name': request.session['user_name']}
+        return render(request, 'home.html', context)
+    else :
+        return render(request, 'login.html')
+
+def logout(request):
+    request.session['user_name'] = {}
+    request.session['user_id'] = {}
+    request.session.modified    = True
+    return redirect('index')
+def loginProc(request):
+    print('request - loginProc')
+    if request.method =='GET':
+        return redirect('index')
+    elif request.method =='POST':
+        id = request.POST['id']
+        pwd = request.POST['pwd']
+
+        #select * from bbsuserregister where user_id = id and user_pwd = pwd
+        # orm: class - table
+        user = UserInfo.objects.get(userid = id , pwd=pwd)
+        print('user result - ', user)
+        context = {}
+        if user is not None:
+            request.session['user_name'] = user.user_name
+            request.session['user_id'] = user.user_id
+            context['name']=request.session['user_name']
+            context['id']=request.session['user_id']
+            return render(request , 'home.html',context)
+        else :
+            return redirect('index')
+
+def registerForm(request):
+
+    print('request - registerForm')
+    return render(request, 'join.html')
+
+def register(request):
+    #id,pwd,name -> model -> db(insert)
+    if request.method == 'POST' :
+        divId = request.POST['divId']
+        divPassword = request.POST['divPassword']
+        divPasswordCheck = request.POST['divPasswordCheck']
+        divName = request.POST['divName']
+        divNickname = request.POST['divNickname']
+        divPhoneNumber = request.POST['divPhoneNumber']
+        charger = request.POST['charger']
+        print('request - ' , divId, divPassword, divPasswordCheck, divName, divNickname, divPhoneNumber, charger)
+        register = UserInfo(userid = divId , pwd = divPassword , usernm = divName, nicknm = divNickname , phonenum = divPhoneNumber,charger = charger )
+        register.save()
+    return render(request, 'login.html')
+def home(request):
+    return render(request, 'home.html')

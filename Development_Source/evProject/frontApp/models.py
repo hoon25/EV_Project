@@ -243,12 +243,17 @@ class UserCar(models.Model):
 
 
 class UserInfo(models.Model):
-    userid = models.CharField(db_column='userId', primary_key=True, max_length=45)  # Field name made lowercase.
-    nicknm = models.CharField(db_column='nickNm', max_length=45, blank=True, null=True)  # Field name made lowercase.
-    usernm = models.CharField(db_column='userNm', max_length=45, blank=True, null=True)  # Field name made lowercase.
-    pwd = models.CharField(max_length=45, blank=True, null=True)
-    phonenum = models.CharField(db_column='phoneNum', max_length=45, blank=True, null=True)  # Field name made lowercase.
+    userid = models.CharField( max_length=45)  # Field name made lowercase.
+    nicknm = models.CharField( max_length=45)  # Field name made lowercase.
+    usernm = models.CharField( max_length=45)  # Field name made lowercase.
+    pwd    = models.CharField( max_length=45)
+    phonenum = models.CharField(max_length=45)  # Field name made lowercase.
+    charger = models.CharField(max_length=50)
 
-    class Meta:
-        managed = False
-        db_table = 'user_info'
+    def __str__(self):
+        return self.userid + " , " + self.pwd + " , " + self.usernm+ " , " + self.nicknm+ self.phonenum+ " , " + self.charger
+
+    # class Meta:
+    #     managed = True
+    #     db_table = 'user_info'
+    #

@@ -1,0 +1,347 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>회원가입</title>
+        <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+        <script src="http://code.jquery.com/jquery.js"></script>>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    </head>
+    <body>
+        <div class="container">
+            <div class="row">
+                <p></p>
+                <div class="col-md-12">
+                    <small>
+                    <a href="{% url 'login' %}">로그인</a> | <a href="#">회원가입</a>
+                    </small>
+                <form action="{% url 'register' %}" method="post">
+				{% csrf_token %}
+                <div class="form-group has-feedback">
+                    <label for="inputId" class="col-lg-2 control-label">아이디</label>
+                    <div class="col-lg-10">
+                        <input type="text" name="divId" class="form-control onlyAlphabetAndNumbe" data-rule-required="true"
+						placeholder="30자이내의 알파벳, 언더스코어(_), 숫자만 입력 가능합니다." maxlength="30" /> <span
+						class="glyphicon glyphicon-envelope form-control-feedback"></span>
+                    </div>
+                </div>
+                <div class="form-group has-feedback">
+                    <label for="inputPassword" class="col-lg-2 control-label">패스워드</label>
+                    <div class="col-lg-10">
+                        <input type="password" name="divPassword" class="form-control" data-rule-required="true" placeholder="패스워드" maxlength="30"/> <span
+						class="glyphicon glyphicon-lock form-control-feedback"></span>
+                    </div>
+                </div>
+                <div class="form-group has-feedback">
+                    <label for="inputPasswordCheck" class="col-lg-2 control-label">패스워드 확인</label>
+                    <div class="col-lg-10">
+                        <input type="password" name="divPasswordCheck" class="form-control" data-rule-required="true" placeholder="패스워드 확인" maxlength="30">
+                    </div>
+                </div>
+                <div class="form-group has-feedback">
+                    <label for="inputName" class="col-lg-2 control-label">이름</label>
+                    <div class="col-lg-10">
+                        <input type="text" name="divName" class="form-control onlyHangul" data-rule-required="true" placeholder="한글만 입력 가능합니다." maxlength="15">
+                    </div>
+                </div>
+
+                <div class="form-group has-feedback">
+                    <label for="inputNickname" class="col-lg-2 control-label">별명</label>
+                    <div class="col-lg-10">
+                        <input type="text" name="divNickname" class="form-control" data-rule-required="true" placeholder="별명" maxlength="15">
+                    </div>
+                </div>
+
+
+                <div class="form-group has-feedback">
+                    <label for="inputPhoneNumber" class="col-lg-2 control-label">휴대폰 번호</label>
+                    <div class="col-lg-10">
+                        <input type="tel" name="divPhoneNumber" class="form-control onlyNumber" data-rule-required="true" placeholder="-를 제외하고 숫자만 입력하세요." maxlength="11">
+                    </div>
+                </div>
+
+
+				<div class="form-group has-feedback">
+                    <label for="inputName" class="col-lg-2 control-label">충전기종류</label>
+                    <div class="col-lg-10">
+                        <select name="charger">
+                            <option value="DC차데모">DC차데모</option>
+                            <option value="AC완속">AC완속</option>
+                            <option value="DC콤보">DC콤보</option>
+                            <option value="AC3상">AC3상</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="inputPhoneNumber" class="col-lg-2 control-label">SMS 수신여부</label>
+                    <div class="col-lg-10">
+                        <label class="radio-inline">
+                            <!--suppress XmlDuplicatedId -->
+							<input type="radio" id="smsReceiveYn" name="smsReceiveYn" value="Y" checked> 동의합니다.
+                        </label>
+                        <label class="radio-inline">
+                            <!--suppress XmlDuplicatedId -->
+							<input type="radio" id="smsReceiveYn" name="smsReceiveYn" value="N"> 동의하지 않습니다.
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-lg-offset-2 col-lg-10">
+                        <button type="submit" class="btn btn-primary">Sign in</button>
+                    </div>
+                </div>
+            </form>
+                </div>
+            </div>
+    <script src="{% static  '/resources/plugins/jQuery/jQuery-2.1.4.min.js' %}"></script>
+	<!-- Bootstrap 3.3.2 JS -->
+	<script src="{% static '/resources/bootstrap/js/bootstrap.min.js' %}"
+		type="text/javascript"></script>
+	<!-- iCheck -->
+	<script src="{% static '/resources/plugins/iCheck/icheck.min.js' %}"
+		type="text/javascript"></script>
+
+
+        <script>
+
+            $(function(){
+                var modalContents = $(".modal-contents");
+                var modal = $("#defaultModal");
+
+                $('.onlyAlphabetAndNumber').keyup(function(event){
+                    if (!(event.keyCode >=37 && event.keyCode<=40)) {
+                        var inputVal = $(this).val();
+                        $(this).val($(this).val().replace(/[^_a-z0-9]/gi,''));
+                    }
+                });
+
+                $(".onlyHangul").keyup(function(event){
+                    if (!(event.keyCode >=37 && event.keyCode<=40)) {
+                        var inputVal = $(this).val();
+                        $(this).val(inputVal.replace(/[a-z0-9]/gi,''));
+                    }
+                });
+
+                $(".onlyNumber").keyup(function(event){
+                    if (!(event.keyCode >=37 && event.keyCode<=40)) {
+                        var inputVal = $(this).val();
+                        $(this).val(inputVal.replace(/[^0-9]/gi,''));
+                    }
+                });
+
+                $('#id').keyup(function(event){
+
+                    var divId = $('#divId');
+
+                    if($('#id').val()==""){
+                        divId.removeClass("has-success");
+                        divId.addClass("has-error");
+                    }else{
+                        divId.removeClass("has-error");
+                        divId.addClass("has-success");
+                    }
+                });
+
+                $('#password').keyup(function(event){
+
+                    var divPassword = $('#divPassword');
+
+                    if($('#password').val()==""){
+                        divPassword.removeClass("has-success");
+                        divPassword.addClass("has-error");
+                    }else{
+                        divPassword.removeClass("has-error");
+                        divPassword.addClass("has-success");
+                    }
+                });
+
+                $('#passwordCheck').keyup(function(event){
+
+                    var passwordCheck = $('#passwordCheck').val();
+                    var password = $('#password').val();
+                    var divPasswordCheck = $('#divPasswordCheck');
+
+                    if((passwordCheck=="") || (password!=passwordCheck)){
+                        divPasswordCheck.removeClass("has-success");
+                        divPasswordCheck.addClass("has-error");
+                    }else{
+                        divPasswordCheck.removeClass("has-error");
+                        divPasswordCheck.addClass("has-success");
+                    }
+                });
+
+                $('#name').keyup(function(event){
+
+                    var divName = $('#divName');
+
+                    if($.trim($('#name').val())==""){
+                        divName.removeClass("has-success");
+                        divName.addClass("has-error");
+                    }else{
+                        divName.removeClass("has-error");
+                        divName.addClass("has-success");
+                    }
+                });
+
+                $('#nickname').keyup(function(event){
+
+                    var divNickname = $('#divNickname');
+
+                    if($.trim($('#nickname').val())==""){
+                        divNickname.removeClass("has-success");
+                        divNickname.addClass("has-error");
+                    }else{
+                        divNickname.removeClass("has-error");
+                        divNickname.addClass("has-success");
+                    }
+                });
+
+
+
+                $('#phoneNumber').keyup(function(event){
+
+                    var divPhoneNumber = $('#divPhoneNumber');
+
+                    if($.trim($('#phoneNumber').val())==""){
+                        divPhoneNumber.removeClass("has-success");
+                        divPhoneNumber.addClass("has-error");
+                    }else{
+                        divPhoneNumber.removeClass("has-error");
+                        divPhoneNumber.addClass("has-success");
+                    }
+                });
+
+                $( "form" ).submit(function( event ) {
+
+                    var divId = $('#divId');
+                    var divPassword = $('#divPassword');
+                    var divPasswordCheck = $('#divPasswordCheck');
+                    var divName = $('#divName');
+                    var divNickname = $('#divNickname');
+                    var divEmail = $('#divEmail');
+                    var divPhoneNumber = $('#divPhoneNumber');
+
+
+
+                    if($('#id').val()==""){
+                        modalContents.text("아이디를 입력하여 주시기 바랍니다.");
+                        modal.modal('show');
+
+                        divId.removeClass("has-success");
+                        divId.addClass("has-error");
+                        $('#id').focus();
+                        return false;
+                    }else{
+                        divId.removeClass("has-error");
+                        divId.addClass("has-success");
+                    }
+
+                    if($('#password').val()==""){
+                        modalContents.text("패스워드를 입력하여 주시기 바랍니다.");
+                        modal.modal('show');
+
+                        divPassword.removeClass("has-success");
+                        divPassword.addClass("has-error");
+                        $('#password').focus();
+                        return false;
+                    }else{
+                        divPassword.removeClass("has-error");
+                        divPassword.addClass("has-success");
+                    }
+
+                    if($('#passwordCheck').val()==""){
+                        modalContents.text("패스워드 확인을 입력하여 주시기 바랍니다.");
+                        modal.modal('show');
+
+                        divPasswordCheck.removeClass("has-success");
+                        divPasswordCheck.addClass("has-error");
+                        $('#passwordCheck').focus();
+                        return false;
+                    }else{
+                        divPasswordCheck.removeClass("has-error");
+                        divPasswordCheck.addClass("has-success");
+                    }
+
+                    if($('#password').val()!=$('#passwordCheck').val() || $('#passwordCheck').val()==""){
+                        modalContents.text("패스워드가 일치하지 않습니다.");
+                        modal.modal('show');
+
+                        divPasswordCheck.removeClass("has-success");
+                        divPasswordCheck.addClass("has-error");
+                        $('#passwordCheck').focus();
+                        return false;
+                    }else{
+                        divPasswordCheck.removeClass("has-error");
+                        divPasswordCheck.addClass("has-success");
+                    }
+
+                    //이름
+                    if($('#name').val()==""){
+                        modalContents.text("이름을 입력하여 주시기 바랍니다.");
+                        modal.modal('show');
+
+                        divName.removeClass("has-success");
+                        divName.addClass("has-error");
+                        $('#name').focus();
+                        return false;
+                    }else{
+                        divName.removeClass("has-error");
+                        divName.addClass("has-success");
+                    }
+
+                    if($('#nickname').val()==""){
+                        modalContents.text("별명을 입력하여 주시기 바랍니다.");
+                        modal.modal('show');
+
+                        divNickname.removeClass("has-success");
+                        divNickname.addClass("has-error");
+                        $('#nickname').focus();
+                        return false;
+                    }else{
+                        divNickname.removeClass("has-error");
+                        divNickname.addClass("has-success");
+                    }
+
+
+                    if($('#phoneNumber').val()==""){
+                        modalContents.text("휴대폰 번호를 입력하여 주시기 바랍니다.");
+                        modal.modal('show');
+
+                        divPhoneNumber.removeClass("has-success");
+                        divPhoneNumber.addClass("has-error");
+                        $('#phoneNumber').focus();
+                        return false;
+                    }else{
+                        divPhoneNumber.removeClass("has-error");
+                        divPhoneNumber.addClass("has-success");
+                    }
+
+
+                });
+
+            });
+
+        </script>
+            <hr/>
+
+            <div>
+                <p class="text-center">
+                    <small><strong>붕붕차차</strong></small><br>
+                    <small>대표 : 김지윤 ㆍ 주소 :  ㆍ 전화 : </small><br>
+                    <small></small>
+                </p>
+            </div>
+        </div>
+
+    </body>
+
+</html>
+
+
+
+
