@@ -68,15 +68,6 @@ class AuthUserUserPermissions(models.Model):
         unique_together = (('user', 'permission'),)
 
 
-class CarList(models.Model):
-    cartype = models.CharField(db_column='carType', primary_key=True, max_length=45)  # Field name made lowercase.
-    chgertype = models.IntegerField(db_column='chgerType', blank=True, null=True)  # Field name made lowercase.
-
-    class Meta:
-        managed = False
-        db_table = 'car_list'
-
-
 class DjangoAdminLog(models.Model):
     action_time = models.DateTimeField()
     object_id = models.TextField(blank=True, null=True)
@@ -156,11 +147,21 @@ class EvInfo(models.Model):
         db_table = 'ev_info'
 
 
+class EvRealTime(models.Model):
+    evsn = models.BigIntegerField(db_column='evSn', primary_key=True)  # Field name made lowercase.
+    congestion = models.FloatField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'ev_real_time'
+
+
 class EvReview(models.Model):
     reviewsn = models.IntegerField(db_column='reviewSn', primary_key=True)  # Field name made lowercase.
     evsn = models.IntegerField(db_column='evSn', blank=True, null=True)  # Field name made lowercase.
     star = models.IntegerField(blank=True, null=True)
     review = models.CharField(max_length=200, blank=True, null=True)
+    userid = models.CharField(db_column='userId', max_length=45, blank=True, null=True)  # Field name made lowercase.
 
     class Meta:
         managed = False
@@ -199,18 +200,6 @@ class EvStationChgertype(models.Model):
         db_table = 'ev_station_chgertype'
 
 
-class EvStationInoutStat(models.Model):
-    initdate = models.DateField(db_column='initDate', blank=True, null=True)  # Field name made lowercase.
-    evsn = models.BigIntegerField(db_column='evSn', blank=True, null=True)  # Field name made lowercase.
-    statnm = models.CharField(db_column='statNm', max_length=100, blank=True, null=True)  # Field name made lowercase.
-    visitcnt = models.BigIntegerField(db_column='visitCnt', blank=True, null=True)  # Field name made lowercase.
-    chgeravgtime = models.IntegerField(db_column='chgerAvgTime', blank=True, null=True)  # Field name made lowercase.
-
-    class Meta:
-        managed = False
-        db_table = 'ev_station_inout_stat'
-
-
 class EvStationStatus(models.Model):
     evsn = models.BigIntegerField(db_column='evSn', primary_key=True)  # Field name made lowercase.
     statid = models.CharField(db_column='statId', max_length=8)  # Field name made lowercase.
@@ -222,19 +211,6 @@ class EvStationStatus(models.Model):
         managed = False
         db_table = 'ev_station_status'
         unique_together = (('evsn', 'chgerid'),)
-
-
-class EvStationStatusStat(models.Model):
-    initdate = models.DateTimeField(db_column='initDate', primary_key=True)  # Field name made lowercase.
-    evsn = models.BigIntegerField(db_column='evSn')  # Field name made lowercase.
-    statid = models.CharField(db_column='statId', max_length=8)  # Field name made lowercase.
-    chgerid = models.CharField(db_column='chgerId', max_length=2)  # Field name made lowercase.
-    stat = models.CharField(max_length=5)
-
-    class Meta:
-        managed = False
-        db_table = 'ev_station_status_stat'
-        unique_together = (('initdate', 'evsn', 'chgerid'),)
 
 
 class MyEvList(models.Model):
@@ -276,4 +252,3 @@ class UserInfo(models.Model):
     class Meta:
         managed = False
         db_table = 'user_info'
-

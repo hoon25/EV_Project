@@ -15,6 +15,7 @@ urlpatterns = [
     path('evgeolocation/', views.evgeolocation),
     path('station/', views.station, name = 'station'),
     path('station_search/', views.stationSearch, name = 'stationSearch'),
-
-
+    path('direction/', views.direction, name = 'diretion'),
+    path('direction_search/', views.directionSearch, name='directionSearch'),
+    path('station_detail/', views.stationDetail, name = 'stationDetail')
 ]

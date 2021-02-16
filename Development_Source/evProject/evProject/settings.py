@@ -90,7 +90,7 @@ DATABASES = {
         'PASSWORD': 'Ev12341234!',
         'HOST': '112.147.119.224',
         'PORT': '3306',
-    }
+    },
 }
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
