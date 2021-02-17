@@ -86,8 +86,9 @@ def stationSearch(request):
     if type == 'statnm':
         try:
             cursor = connection.cursor()
-            strSql = "select evst.statNm,evst.addr,evst.lat,evst.lng,evst.useTime,evst.busicall, info.descInfo " \
-                     "from ev.ev_station evst,(select c.evSn, group_concat(des SEPARATOR '\n') as descInfo " \
+            strSql = "select evst.statNm,evst.addr,evst.lat,evst.lng,evst.useTime,evst.busicall,descInfo,congestion " \
+                     "from ev_station evst \
+                join ev_real_time evtm on(evst.evsn=evtm.evsn),(select c.evSn, group_concat(des SEPARATOR '\n') as descInfo " \
                      "from (select a.evSn, a.chgerId, concat('기기 번호 :', a.chgerId , ' ( 상태 : ' , (select codeName from ev_code_inf where codeId = a.stat) , ', 충전타입 : ' , GROUP_CONCAT((select codeName from ev_code_inf where codeId = b.chgerType) SEPARATOR ','),')') as des " \
                      "from ev.ev_station_status a, ev.ev_station_chgertype b " \
                      "where	a.evSn = b.evSn group by a.evSn, a.chgerId) c group by c.evSn) info " \
@@ -127,13 +128,14 @@ def stationSearch(request):
     list = []
     cnt = 0
     for station in stations:
-        row = {'statnm': station[0],
+        row = {'statNm': station[0],
                'addr': station[1],
                'lat': station[2],
                'lng': station[3],
                'useTime': station[4],
-               'busicall': station[5],
-               'info': station[6],
+               'busiCall': station[5],
+               'descInfo': station[6],
+               'congestion' : station[7],
                }
         list.append(row)
         cnt += 1

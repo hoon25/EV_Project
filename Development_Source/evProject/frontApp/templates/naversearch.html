@@ -80,7 +80,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
     <title>간단한 지도 표시하기</title>
-    <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=fiwz437z83"></script>
+    <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=djtsnlvpvb"></script>
     <style type="text/css">
         div#viewLoading {
         text-align: center;
@@ -163,11 +163,13 @@ $(document).ready(function(){
 
                     var contentString = [
                         '<div class="iw_inner">',
-                        '    <h3>'+data[i].statnm+'</h3>',
+                        '    <h4>충전소명 : '+data[i].statNm+'</h4>',
                         '    <p><a href="{% url 'stationDetail' %}">자세히보기</a></p>',
-                        '    <h4>'+data[i].addr+'</h4>',
-                        '    <p>'+data[i].useTime+'  / '+data[i].busicall+'<br/>',
-                        '    '+data[i].info+'<br/> ',
+                        '    <h5>주소 : '+data[i].addr+'</h5>',
+                        '    <p>이용가능시간 : '+data[i].useTime+' <br/>',
+                        '    연락처 : '+data[i].busiCall+'<br/>',
+                        '    충전기 : '+data[i].descInfo+'<br/> ',
+                        '    혼잡도 : '+data[i].congestion,
                         '    </p>',
                         '</div>'
                         ].join('');
