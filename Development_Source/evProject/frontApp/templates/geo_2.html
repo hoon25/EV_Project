@@ -150,27 +150,18 @@ $(document).ready(function(){
             success : function(data){
                     var markers = $(data).map(function(i,position){
                         $.each(data, function(idx, obj){
-                            if (obj.conlevel == 'green-dot.png') {
-                                var marker = new naver.maps.Marker({
-                                position: new naver.maps.LatLng(obj.lat, obj.lng),
-                                map: map,
-                                icon: "{% static '/img/green-dot.png' %}"
-                                });
+                             if (obj.congestion<0.5){
+                                var icon = "{% static '/img/green-dot.png' %}"
+                            } else if (obj.congestion<1){
+                                var icon = "{% static '/img/yellow-dot.png' %}"
+                            } else {
+                                var icon = "{% static '/img/red-dot.png' %}"
                             }
-                            if (obj.conlevel == 'yellow-dot.png') {
-                                var marker = new naver.maps.Marker({
-                                position: new naver.maps.LatLng(obj.lat, obj.lng),
-                                map: map,
-                                icon: "{% static '/img/yellow-dot.png' %}"
-                                });
-                            }
-                            if (obj.conlevel == 'red-dot.png') {
-                                var marker = new naver.maps.Marker({
-                                position: new naver.maps.LatLng(obj.lat, obj.lng),
-                                map: map,
-                                icon: "{% static '/img/red-dot.png' %}"
-                                });
-                            }
+                            var marker = new naver.maps.Marker({
+                            position: new naver.maps.LatLng(obj.lat, obj.lng),
+                            map: map,
+                            icon: icon
+                            });
                         var content = '<div style="padding:5px;">'
                                        +'<h4>충전소명 : '+obj.statNm+'</h4>'
                                        +'<p><a href="{% url 'stationDetail' %}">자세히보기</a></p>'
