@@ -28,7 +28,8 @@
     <!-- Sidebar -->
     <div class="bg-light border-right" id="sidebar-wrapper">
       <div class="align-items-center">
-  <img src="{% static  '/resources/dist/img/icon2.png' %}" class="img-circle" alt="User Image"/>
+  <img src="/static/img/icon2.png" width="100%" class="img-circle" alt="User Image">
+
       </div>
       <div class="sidebar-heading">전기차 찾아줘 붕붕차차 </div>
       <div class="list-group list-group-flush">
@@ -80,7 +81,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
     <title>GPS 기반 반경 2Km 이내 전기차 충전소 위치표시</title>
-    <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=djtsnlvpvb"></script>
+    <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=nery8si7l9"></script>
     <script src="http://code.jquery.com/jquery-latest.min.js"></script>
     <script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
 
@@ -181,6 +182,7 @@ $(document).ready(function(){
                                        '</div>'
 <!--                                        objRemoveable = true;-->
                         var infowindow = new naver.maps.InfoWindow({
+
                         content: content,
                         backgroundColor : "#eee",
                         borderColor : "#151515",

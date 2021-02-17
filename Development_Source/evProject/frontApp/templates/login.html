@@ -1,5 +1,5 @@
-{% load static %}
 
+<!DOCTYPE html>
 <html lang="ko">
     <head>
         <meta charset="utf-8">
@@ -12,9 +12,9 @@
     </head>
   <body class="login-page">
     <div class="login-box">
-      <div class="login-logo">
+
         <a href="{% url 'home' %}"><b></b>Project</a>
-      </div><!-- /.login-logo -->
+
 
 <form action="{% url 'login' %}" method="post">
   {% csrf_token %}
