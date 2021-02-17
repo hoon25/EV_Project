@@ -218,6 +218,10 @@ def stationDetail(request):
 
 def content_recommendation(request):
     return render(request, 'ContentRecommendation.html')
+def mypage(request):
+    return render(request, 'mypage.html')
+def comment(request):
+    return render(request, 'comment.html')
 
 #홈페이지
 
