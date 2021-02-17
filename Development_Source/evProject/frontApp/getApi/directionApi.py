@@ -59,8 +59,8 @@ def getDirectionApi(start,goal):
         minimum_pathlist = pathlist
     return minimum_pathlist
 
-data = getDirectionApi("127.02532990776793,37.49734610716973","129.04004110841345,35.11585353782553")
-print(data)
+# data = getDirectionApi("127.02532990776793,37.49734610716973","129.04004110841345,35.11585353782553")
+# print(data)
 
 
 

@@ -40,8 +40,8 @@ def getGeocode(query):
     print(list)
     return list
 
-data = getGeocode("천호1동")
-print(data)
+# data = getGeocode("천호1동")
+# print(data)
 
 
 
