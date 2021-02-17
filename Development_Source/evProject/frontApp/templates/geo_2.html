@@ -84,15 +84,58 @@
     <script src="http://code.jquery.com/jquery-latest.min.js"></script>
     <script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
 
+    <style type="text/css">
+        div#viewLoading {
+        text-align: center;
+        padding-top: 70px;
+        background: #FFFFF0;
+        filter: alpha(opacity=60);
+        opacity: alpha*0.6;
+        }
+    </style>
+
+<div id="viewLoading">
+    <img src="{%static 'viewLoading.gif' %}">
+</div>
+
+
+
 <div class = 'search'>
     <button id='evBtn'>충전소 보기</button>
-</div>
+    <button id="newBtn">초기화</button>
+
+    <div class = 'filtering'>
+        <strong>충전기 종류를 선택하세요 &emsp;
+        <label><input type="checkbox" checked>DC차데모</label>
+        <label><input type="checkbox" checked>AC완속</label>
+        <label><input type="checkbox" checked>DC콤보</label>
+        <label><input type="checkbox" checked>AC3상</label>
+        <button id="filterBtn">필터링</button>
+    </div>
 </div>
     <div id="map" style="width:100%;height:100%;" ></div>
 <!--{% for station in stations %}-->
 <!--{% endfor %}-->
 <script>
 $(document).ready(function(){
+    $('#newBtn').click(function(){
+        location.href = './'
+    })
+    $('#filterBtn').click(function(){
+        alert('개발예정입니다');
+    })
+
+    $('#viewLoading').hide();
+
+    $(window)
+		.ajaxStart(function(){
+			$('#viewLoading').show();
+		})
+		.ajaxStop(function(){
+			$('#viewLoading').hide();
+		});
+
+
     $('#evBtn').click(function(){
         console.log(user_lat)
         console.log(user_lng)

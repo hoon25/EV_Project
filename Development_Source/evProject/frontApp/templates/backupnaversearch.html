@@ -114,15 +114,6 @@
         </select>
         <input type = 'text' id = "searchKeyword">
         <button id="searchBtn">검색</button>
-        <button id="newBtn">초기화</button>
-    </div>
-    <div class = 'filtering'>
-        <strong>충전기 종류를 선택하세요 &emsp;
-        <label><input type="checkbox" checked>DC차데모</label>
-        <label><input type="checkbox" checked>AC완속</label>
-        <label><input type="checkbox" checked>DC콤보</label>
-        <label><input type="checkbox" checked>AC3상</label>
-        <button id="filterBtn">필터링</button>
     </div>
 </div>
 <div id="map" style="width:100%;height:800px;"></div>
@@ -133,14 +124,6 @@
 
 
 $(document).ready(function(){
-    $('#newBtn').click(function(){
-        location.href = './'
-    })
-    $('#filterBtn').click(function(){
-        alert('개발예정입니다');
-    })
-
-
     $('#viewLoading').hide();
 
     $(window)
@@ -169,17 +152,9 @@ $(document).ready(function(){
                     infoWindows = [];
 
                 for(var i in data){
-                    if (data[i].congestion<0.5){
-                            var icon = "{% static '/img/green-dot.png' %}"
-                        } else if (data[i].congestion<1){
-                            var icon = "{% static '/img/yellow-dot.png' %}"
-                        } else {
-                            var icon = "{% static '/img/red-dot.png' %}"
-                        }
                     var marker = new naver.maps.Marker({
                         position: new naver.maps.LatLng(data[i].lat, data[i].lng),
-                        map: map,
-                        icon : icon
+                        map: map
                         });
 
 
