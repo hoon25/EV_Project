@@ -158,19 +158,30 @@ $(document).ready(function(){
                     infoWindows = [];
 
                 for(var i in data){
+                    if (data[i].congestion<0.5){
+                            var icon = "{% static '/img/green-dot.png' %}"
+                        } else if (data[i].congestion<1){
+                            var icon = "{% static '/img/yellow-dot.png' %}"
+                        } else {
+                            var icon = "{% static '/img/red-dot.png' %}"
+                        }
                     var marker = new naver.maps.Marker({
                         position: new naver.maps.LatLng(data[i].lat, data[i].lng),
-                        map: map
+                        map: map,
+                        icon : icon
                         });
 
 
 
                     var contentString = [
                         '<div class="iw_inner">',
-                        '    <h3>'+data[i].statnm+'</h3>',
-                        '    <h4>'+data[i].addr+'</h4>',
-                        '    <p>'+data[i].useTime+'  /  '+data[i].busicall+'<br/>',
-                        '    '+data[i].info+'<br/> ',
+                        '    <h4>충전소명 : '+data[i].statNm+'</h4>',
+                        '    <p><a href="{% url 'stationDetail' %}">자세히보기</a></p>',
+                        '    <h5>주소 : '+data[i].addr+'</h5>',
+                        '    <p>이용가능시간 : '+data[i].useTime+' <br/>',
+                        '    연락처 : '+data[i].busiCall+'<br/>',
+                        '    충전기 : '+data[i].descInfo+'<br/> ',
+                        '    혼잡도 : '+data[i].congestion,
                         '    </p>',
                         '</div>'
                         ].join('');
@@ -254,24 +265,6 @@ var map = new naver.maps.Map("map", {
 
 
 
-
-
-
-
-
-
-
-
-var map = new naver.maps.Map("map", {
-        zoom: 10,
-        center: new naver.maps.LatLng(37.413294, 127.1460516),
-        zoomControl: true,
-        zoomControlOptions: {
-            position: naver.maps.Position.TOP_LEFT,
-            style: naver.maps.ZoomControlStyle.SMALL
-        }
-    }),
-    markers = [];
 
 </script>
       </div>
