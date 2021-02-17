@@ -10,7 +10,7 @@
   <meta name="description" content="">
   <meta name="author" content="">
 
-  <title>지도</title>
+  <title>Simple Sidebar - Start Bootstrap Template</title>
 
   <!-- Bootstrap core CSS -->
   <link href="{% static 'vendor/bootstrap/css/bootstrap.css' %}" rel="stylesheet" >
@@ -28,7 +28,11 @@
     <!-- Sidebar -->
     <div class="bg-light border-right" id="sidebar-wrapper">
       <div class="align-items-center">
+<<<<<<< HEAD
   <img src="/static/img/icon2.png" width="100%" class="img-circle" alt="User Image">
+=======
+  <img src="{% static  '/resources/dist/img/icon2.png' %}" class="img-circle" alt="User Image"/>
+>>>>>>> 532455b192c4823c165e6aa4ccdfbcc32b783f4c
       </div>
       <div class="sidebar-heading">전기차 찾아줘 붕붕차차 </div>
       <div class="list-group list-group-flush">
@@ -80,7 +84,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
     <title>GPS 기반 반경 2Km 이내 전기차 충전소 위치표시</title>
-    <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=djtsnlvpvb"></script>
+    <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=nery8si7l9"></script>
     <script src="http://code.jquery.com/jquery-latest.min.js"></script>
     <script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
 
@@ -127,25 +131,18 @@ $(document).ready(function(){
                                 icon: "{% static '/img/red-dot.png' %}"
                                 });
                             }
-                        var contentString = [
-                        '<div class="iw_inner">',
-                        '    <h4>충전소명 : '+data[i].statNm+'</h4>',
-                        '    <p><a href="{% url 'stationDetail' %}">자세히보기</a></p>',
-                        '    <h5>주소 : '+data[i].addr+'</h5>',
-                        '    <p>이용가능시간 : '+data[i].useTime+' <br/>',
-                        '    연락처 : '+data[i].busiCall+'<br/>',
-                        '    충전기 : '+data[i].descInfo+'<br/> ',
-                        '    혼잡도 : '+data[i].congestion,
-                        '    </p>',
-                        '</div>'
-                        ].join('');
+                        var content = '<div style="padding:5px;">'
+                                       +'충전소명 : '+obj.statNm+'<br/>'
+                                       +'주소 : '+obj.addr+'<br/>'
+                                       +'이용가능시간 : '+obj.useTime+'<br/>'
+                                       +'연락처 : '+obj.busiCall+'<br/>'
+                                       +'충전기 : '+obj.descInfo+'<br/>'
+                                       +'혼잡도 : '+obj.congestion+'<br/>'
+                                       '</div>'
 <!--                                        objRemoveable = true;-->
                         var infowindow = new naver.maps.InfoWindow({
-                        content: contentString,
-                        backgroundColor : "#eee",
-                        borderColor : "#151515",
-                        borderWidth: 4,
-                        anchorColor: "#eee",
+                            content : content
+    <!--                        removeable : objRemoveable-->
                         });
                         naver.maps.Event.addListener(marker,'click',function(){
                         infowindow.open(map, marker)
