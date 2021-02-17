@@ -85,15 +85,58 @@
     <script src="http://code.jquery.com/jquery-latest.min.js"></script>
     <script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
 
+    <style type="text/css">
+        div#viewLoading {
+        text-align: center;
+        padding-top: 70px;
+        background: #FFFFF0;
+        filter: alpha(opacity=60);
+        opacity: alpha*0.6;
+        }
+    </style>
+
+<div id="viewLoading">
+    <img src="{%static 'viewLoading.gif' %}">
+</div>
+
+
+
 <div class = 'search'>
     <button id='evBtn'>충전소 보기</button>
-</div>
+    <button id="newBtn">초기화</button>
+
+    <div class = 'filtering'>
+        <strong>충전기 종류를 선택하세요 &emsp;
+        <label><input type="checkbox" checked>DC차데모</label>
+        <label><input type="checkbox" checked>AC완속</label>
+        <label><input type="checkbox" checked>DC콤보</label>
+        <label><input type="checkbox" checked>AC3상</label>
+        <button id="filterBtn">필터링</button>
+    </div>
 </div>
     <div id="map" style="width:100%;height:100%;" ></div>
 <!--{% for station in stations %}-->
 <!--{% endfor %}-->
 <script>
 $(document).ready(function(){
+    $('#newBtn').click(function(){
+        location.href = './'
+    })
+    $('#filterBtn').click(function(){
+        alert('개발예정입니다');
+    })
+
+    $('#viewLoading').hide();
+
+    $(window)
+		.ajaxStart(function(){
+			$('#viewLoading').show();
+		})
+		.ajaxStop(function(){
+			$('#viewLoading').hide();
+		});
+
+
     $('#evBtn').click(function(){
         console.log(user_lat)
         console.log(user_lng)
@@ -107,39 +150,35 @@ $(document).ready(function(){
             success : function(data){
                     var markers = $(data).map(function(i,position){
                         $.each(data, function(idx, obj){
-                            if (obj.conlevel == 'green-dot.png') {
-                                var marker = new naver.maps.Marker({
-                                position: new naver.maps.LatLng(obj.lat, obj.lng),
-                                map: map,
-                                icon: "{% static '/img/green-dot.png' %}"
-                                });
+                             if (obj.congestion<0.5){
+                                var icon = "{% static '/img/green-dot.png' %}"
+                            } else if (obj.congestion<1){
+                                var icon = "{% static '/img/yellow-dot.png' %}"
+                            } else {
+                                var icon = "{% static '/img/red-dot.png' %}"
                             }
-                            if (obj.conlevel == 'yellow-dot.png') {
-                                var marker = new naver.maps.Marker({
-                                position: new naver.maps.LatLng(obj.lat, obj.lng),
-                                map: map,
-                                icon: "{% static '/img/yellow-dot.png' %}"
-                                });
-                            }
-                            if (obj.conlevel == 'red-dot.png') {
-                                var marker = new naver.maps.Marker({
-                                position: new naver.maps.LatLng(obj.lat, obj.lng),
-                                map: map,
-                                icon: "{% static '/img/red-dot.png' %}"
-                                });
-                            }
+                            var marker = new naver.maps.Marker({
+                            position: new naver.maps.LatLng(obj.lat, obj.lng),
+                            map: map,
+                            icon: icon
+                            });
                         var content = '<div style="padding:5px;">'
-                                       +'충전소명 : '+obj.statNm+'<br/>'
-                                       +'주소 : '+obj.addr+'<br/>'
-                                       +'이용가능시간 : '+obj.useTime+'<br/>'
+                                       +'<h4>충전소명 : '+obj.statNm+'</h4>'
+                                       +'<p><a href="{% url 'stationDetail' %}">자세히보기</a></p>'
+                                       +'<h5>주소 : '+obj.addr+'</h5>'
+                                       +'<p>이용가능시간 : '+obj.useTime+'<br/>'
                                        +'연락처 : '+obj.busiCall+'<br/>'
                                        +'충전기 : '+obj.descInfo+'<br/>'
                                        +'혼잡도 : '+obj.congestion+'<br/>'
                                        '</div>'
 <!--                                        objRemoveable = true;-->
                         var infowindow = new naver.maps.InfoWindow({
-                            content : content
-    <!--                        removeable : objRemoveable-->
+
+                        content: content,
+                        backgroundColor : "#eee",
+                        borderColor : "#151515",
+                        borderWidth: 4,
+                        anchorColor: "#eee",
                         });
                         naver.maps.Event.addListener(marker,'click',function(){
                         infowindow.open(map, marker)

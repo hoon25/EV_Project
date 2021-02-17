@@ -10,7 +10,7 @@
   <meta name="description" content="">
   <meta name="author" content="">
 
-  <title>길찾기</title>
+  <title>Simple Sidebar - Start Bootstrap Template</title>
 
   <!-- Bootstrap core CSS -->
   <link href="{% static 'vendor/bootstrap/css/bootstrap.css' %}" rel="stylesheet" >
@@ -28,7 +28,7 @@
     <!-- Sidebar -->
     <div class="bg-light border-right" id="sidebar-wrapper">
       <div class="align-items-center">
-  <img src="/static/img/icon2.png" width="100%" class="img-circle" alt="User Image">
+  <img src="{% static  '/resources/dist/img/icon2.png' %}" class="img-circle" alt="User Image"/>
       </div>
       <div class="sidebar-heading">전기차 찾아줘 붕붕차차 </div>
       <div class="list-group list-group-flush">
@@ -81,7 +81,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
     <title>간단한 지도 표시하기</title>
     <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=djtsnlvpvb"></script>
-
     <style type="text/css">
         div#viewLoading {
         text-align: center;
@@ -90,7 +89,11 @@
         filter: alpha(opacity=60);
         opacity: alpha*0.6;
         }
+
     </style>
+
+
+
 
 
 
@@ -99,39 +102,28 @@
 </div>
 
 
+
+
+
+
 <div class = 'search'>
     <div class = 'search-body'>
-        <fieldset>
-            <legend>지역입력</legend>
-            <label>출발지역 : <input type="text", id = "startKeyword"></label>
-            <label>도착지역 : <input type="text", id = "goalKeyword"></label>
-            <button id="searchBtn">검색</button>
-            <button id="newBtn">초기화</button>
-        </fieldset>
+        <select id = 'searchType'>
+            <option value = 'statnm'>충전소 이름</option>
+            <option value = 'addr'>주소</option>
+        </select>
+        <input type = 'text' id = "searchKeyword">
+        <button id="searchBtn">검색</button>
     </div>
-
-
-    <div class = 'filtering'>
-        <strong>충전기 종류를 선택하세요 &emsp;
-        <label><input type="checkbox" checked>DC차데모</label>
-        <label><input type="checkbox" checked>AC완속</label>
-        <label><input type="checkbox" checked>DC콤보</label>
-        <label><input type="checkbox" checked>AC3상</label>
-        <button id="filterBtn">필터링</button>
-    </div>
-
 </div>
 <div id="map" style="width:100%;height:800px;"></div>
 
 <script  src="http://code.jquery.com/jquery-latest.min.js"></script>
 <script>
+
+
+
 $(document).ready(function(){
-    $('#newBtn').click(function(){
-        location.href = './'
-    })
-    $('#filterBtn').click(function(){
-        alert('개발예정입니다');
-    })
     $('#viewLoading').hide();
 
     $(window)
@@ -139,18 +131,20 @@ $(document).ready(function(){
 			$('#viewLoading').show();
 		})
 		.ajaxStop(function(){
+		    alert('검색이 완료되었습니다.');
 			$('#viewLoading').hide();
 		});
 
+
     $('#searchBtn').click(function(){
-        start = $('#startKeyword').val()
-        goal = $('#goalKeyword').val()
+        type = $('#searchType').val()
+        keyword = $('#searchKeyword').val()
         $.ajax({
-            url : "{% url 'directionSearch' %}",
+            url : "{% url 'stationSearch' %}",
             type : "post",
             data : {"csrfmiddlewaretoken" : '{{csrf_token}}',
-                    start : start,
-                    goal : goal},
+                    type : type,
+                    keyword : keyword},
             dataType : 'json',
             success : function(data){
 
@@ -158,18 +152,12 @@ $(document).ready(function(){
                     infoWindows = [];
 
                 for(var i in data){
-                    if (data[i].congestion<0.5){
-                            var icon = "{% static '/img/green-dot.png' %}"
-                        } else if (data[i].congestion<1){
-                            var icon = "{% static '/img/yellow-dot.png' %}"
-                        } else {
-                            var icon = "{% static '/img/red-dot.png' %}"
-                        }
                     var marker = new naver.maps.Marker({
                         position: new naver.maps.LatLng(data[i].lat, data[i].lng),
-                        map: map,
-                        icon : icon
+                        map: map
                         });
+
+
 
 
 
@@ -247,6 +235,7 @@ $(document).ready(function(){
                 }
             }
         });
+
     })
 })
 
@@ -261,10 +250,6 @@ var map = new naver.maps.Map("map", {
         }
     }),
     markers = [];
-
-
-
-
 
 </script>
       </div>
