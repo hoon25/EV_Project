@@ -86,11 +86,14 @@ $(document).ready(function(){
 
 
 
+
+
                     var contentString = [
                         '<div class="iw_inner">',
-                        '    <h3>'+data[i].statnm+'</h3><button id="{% url 'stationDetail' %}}">자세히 보기</button>',
+                        '    <h3>'+data[i].statnm+'</h3>',
+                        '    <p><a href="{% url 'stationDetail' %}">자세히보기</a></p>',
                         '    <h4>'+data[i].addr+'</h4>',
-                        '    <p>'+data[i].useTime+'  /  '+data[i].busicall+'<br/>',
+                        '    <p>'+data[i].useTime+'  / '+data[i].busicall+'<br/>',
                         '    '+data[i].info+'<br/> ',
                         '    </p>',
                         '</div>'

@@ -146,7 +146,8 @@ def stationSearch(request):
                'lng': station[3],
                'useTime': station[4],
                'busicall': station[5],
-               'info': station[6]}
+               'info': station[6],
+               }
         list.append(row)
         cnt += 1
         if cnt == 100:
@@ -225,7 +226,8 @@ def directionSearch(request):
 
 
 def stationDetail(request):
-    print("stationDetail load")
+    print("stationDetail load ")
+
 
     return render(request, 'stationDetail.html')
 
