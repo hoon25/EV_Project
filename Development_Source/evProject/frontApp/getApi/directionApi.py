@@ -35,16 +35,6 @@ from urllib.parse import urlparse    # 한글 처리
 def getDirectionApi(start,goal):
     url = "https://naveropenapi.apigw.ntruss.com/map-direction/v1/driving?"
 
-    # s_lat = "127.02532990776793"
-    # s_lng = "37.49734610716973"
-    # g_lat = "129.04004110841345"
-    # g_lng = "35.11585353782553"
-    # start = s_lat + "," + s_lng
-    # goal = g_lat + "," + g_lng
-
-    # start = "127.02532990776793,37.49734610716973"
-    # goal = "129.04004110841345,35.11585353782553"
-
     keyword = "start=" + start + "&goal=" + goal
     url_fin = url + keyword
 
@@ -55,8 +45,8 @@ def getDirectionApi(start,goal):
     json_obj = result.json()
 
     pathlist = json_obj['route']['traoptimal'][0]['path']
-    # print(pathlist)
-    # print(len(pathlist)) # 4649 너무많다
+
+    print(len(pathlist)) # 4649
     if len(pathlist) > 100:
 
         div = len(pathlist)/100
@@ -64,14 +54,13 @@ def getDirectionApi(start,goal):
         minimum_pathlist = []
         for i in range(0,len(pathlist),div):
             minimum_pathlist.append(pathlist[i])
-        # print(len(minimum_pathlist))
+        print(len(minimum_pathlist))  # 101
     else:
         minimum_pathlist = pathlist
-    print(type(minimum_pathlist))
     return minimum_pathlist
-#
-# data = getDirectionApi("127.02532990776793,37.49734610716973","129.04004110841345,35.11585353782553")
-# print(data)
+
+data = getDirectionApi("127.02532990776793,37.49734610716973","129.04004110841345,35.11585353782553")
+print(data)
 
 
 
