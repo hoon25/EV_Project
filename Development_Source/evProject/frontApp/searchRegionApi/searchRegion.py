@@ -6,7 +6,7 @@ import requests
 import urllib.request
 import urllib
 from urllib.parse import quote  # 이 패키지는 한글을 ascii코드로 변환할 때 쓰입니다!!
-import pandas as pd  # return 받은 값들을 나중에는 데이터프레임 형태로 저장할 거에요!
+# import pandas as pd  # return 받은 값들을 나중에는 데이터프레임 형태로 저장할 거에요!
 
 
 def searchContent(keyword):
