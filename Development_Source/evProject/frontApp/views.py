@@ -254,14 +254,14 @@ def loginProc(request):
 
         #select * from bbsuserregister where user_id = id and user_pwd = pwd
         # orm: class - table
-        user = UserInfo.objects.get(userid = id , pwd=pwd)
+        user = UserInfo.objects.get(user_id = id , pwd=pwd)
         print('user result - ', user)
         context = {}
         if user is not None:
-            request.session['user_name'] = user.user_name
-            request.session['user_id'] = user.user_id
-            context['name']=request.session['user_name']
-            context['id']=request.session['user_id']
+            request.session['divName'] = user.userNm
+            request.session['divId'] = user.user_id
+            context['name']=request.session['divName']
+            context['id']=request.session['divId']
             return render(request , 'home.html',context)
         else :
             return redirect('index')
@@ -273,7 +273,9 @@ def registerForm(request):
 
 def register(request):
     #id,pwd,name -> model -> db(insert)
-    if request.method == 'POST' :
+    if request.method == 'Get':
+        return render(request, 'join.html')
+    elif request.method == 'POST' :
         divId = request.POST['divId']
         divPassword = request.POST['divPassword']
         divPasswordCheck = request.POST['divPasswordCheck']
@@ -282,8 +284,9 @@ def register(request):
         divPhoneNumber = request.POST['divPhoneNumber']
         charger = request.POST['charger']
         print('request - ' , divId, divPassword, divPasswordCheck, divName, divNickname, divPhoneNumber, charger)
-        register = UserInfo(userid = divId , pwd = divPassword , usernm = divName, nicknm = divNickname , phonenum = divPhoneNumber,charger = charger )
+        register = UserInfo(user_id = divId , pwd = divPassword , userNm = divName, nickNm = divNickname , phoneNum = divPhoneNumber,chgerType = charger )
         register.save()
     return render(request, 'login.html')
 def home(request):
     return render(request, 'home.html')
+

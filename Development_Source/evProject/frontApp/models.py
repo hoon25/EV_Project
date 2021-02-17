@@ -243,17 +243,17 @@ class UserCar(models.Model):
 
 
 class UserInfo(models.Model):
-    userid = models.CharField( max_length=45)  # Field name made lowercase.
-    nicknm = models.CharField( max_length=45)  # Field name made lowercase.
-    usernm = models.CharField( max_length=45)  # Field name made lowercase.
-    pwd    = models.CharField( max_length=45)
-    phonenum = models.CharField(max_length=45)  # Field name made lowercase.
-    charger = models.CharField(max_length=50)
+    user_id = models.CharField(db_column='userId', primary_key=True,max_length=45)  # Field name made lowercase.
+    nickNm = models.CharField(db_column='nickNm',max_length=45)  # Field name made lowercase.
+    userNm = models.CharField(db_column='userNm',max_length=45)  # Field name made lowercase.
+    pwd    = models.CharField(db_column='pwd',max_length=45)
+    phoneNum = models.CharField(db_column='phoneNum',max_length=45)  # Field name made lowercase.
+    chgerType = models.CharField(db_column='chgerType',max_length=5)
 
     def __str__(self):
-        return self.userid + " , " + self.pwd + " , " + self.usernm+ " , " + self.nicknm+ self.phonenum+ " , " + self.charger
+        return self.user_id + " , " + self.pwd + " , " + self.userNm+ " , " + self.nickNm+ self.phoneNum+ " , " + self.chgerType
 
-    # class Meta:
-    #     managed = True
-    #     db_table = 'user_info'
-    #
+    class Meta:
+        managed = True
+        db_table = 'user_info'
+
