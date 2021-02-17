@@ -1,10 +1,8 @@
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 from django.http import JsonResponse
 
 from .models import *
 from django.db import connection
-import math
-from haversine import haversine, Unit
 
 
 from frontApp.getApi.directionApi import getDirectionApi # 네이버지도 길찾기
@@ -15,23 +13,12 @@ from frontApp.getApi.geocodeApi import getGeocode # 네이버 주소 기반 좌�
 def mygps(request) :
     print('request mygps - ')
     return render(request,'geo_2.html')
-
-
 def evSearch(request) :
     if request.method == 'POST':
         user_lat = request.POST['lat']
         user_lng = request.POST['lng']
     try:
         cursor = connection.cursor()
-        # strSql = "SELECT DISTINCT statNm,addr,lat,lng,useTime,powerType,stat,chgerType,codeName,\
-        #             (6371*acos(cos(radians("+user_lat+"))*cos(radians(lat))*cos(radians(lng)-radians("+user_lng+"))+sin(radians("+user_lat+"))*sin(radians(lat))))AS distance \
-        #             FROM ev_station E \
-        #             JOIN ev_station_status S ON(E.evsn = S.evsn) \
-        #             JOIN ev_station_chgertype C ON(E.evsn = C.evsn) \
-        #             JOIN ev_code_inf I ON(S.stat = I.codeId) \
-        #             HAVING distance <= 2 \
-        #             ORDER BY distance"
-
         strSql = "select evst.statNm,evst.addr,evst.lat,evst.lng,evst.useTime,evst.busiCall,descInfo,congestion, \
                 (6371*acos(cos(radians("+user_lat+"))*cos(radians(evst.lat))*cos(radians(evst.lng)-radians("+user_lng+"))+sin(radians("+user_lat+"))*sin(radians(evst.lat))))AS distance \
                 from ev_station evst \
@@ -46,38 +33,38 @@ def evSearch(request) :
                 where evst.evSn = info.evSn \
                 HAVING distance <= 2 \
                 ORDER BY distance;"
-
         result = cursor.execute(strSql)
         stations = cursor.fetchall()
         print('stations - ', stations)
-
         connection.commit()
         connection.close()
         list = []
-        cnt = 0
+        # cnt = 0
         for station in stations:
+            conlevel = ""
+            if station[7]<0.5 :
+                conlevel = 'green-dot.png'
+                print(conlevel)
+            elif station[7]<0.99 :
+                conlevel = 'yellow-dot.png'
+                print(conlevel)
+            else:
+                conlevel = 'red-dot.png'
+                print(conlevel)
             row = {'statNm': station[0],
                    'addr': station[1],
                    'lat': station[2],
                    'lng': station[3],
-                   'useTime' : station[4],
-                   'busiCall' : station[5],
-                   'descInfo' : station[6],
-                   'congestion' : station[7],
-                   'distance': station[8]}
+                   'useTime': station[4],
+                   'busiCall': station[5],
+                   'descInfo': station[6],
+                   'congestion': station[7],
+                   'distance': station[8] ,
+                   'conlevel': conlevel}
             list.append(row)
-            if station[7]<0.5 :
-                context = {'congestion': '한산'}
-                print('한산')
-            elif station[7]<0.99 :
-                context = {'congestion': '보통'}
-                print('보통')
-            else:
-                context = {'congestion': '복잡'}
-                print('복잡')
-            cnt = cnt + 1
-            if cnt == 5 :
-              break
+            # cnt = cnt + 1
+            # if cnt == 5 :
+            #   break
         for a in list:
             print("check - ", a)
     except :
@@ -231,5 +218,68 @@ def stationDetail(request):
 
     return render(request, 'stationDetail.html')
 
+def content_recommendation(request):
+    return render(request, 'ContentRecommendation.html')
+def mypage(request):
+    return render(request, 'mypage.html')
+def comment(request):
+    return render(request, 'comment.html')
 
+#홈페이지
 
+def index(request):
+    if request.session.get('user_id') and request.session.get('user_name'):
+        context = {'id' : request.session['user_id'],
+                   'name': request.session['user_name']}
+        return render(request, 'home.html', context)
+    else :
+        return render(request, 'login.html')
+
+def logout(request):
+    request.session['user_name'] = {}
+    request.session['user_id'] = {}
+    request.session.modified    = True
+    return redirect('index')
+def loginProc(request):
+    print('request - loginProc')
+    if request.method =='GET':
+        return redirect('index')
+    elif request.method =='POST':
+        id = request.POST['id']
+        pwd = request.POST['pwd']
+
+        #select * from bbsuserregister where user_id = id and user_pwd = pwd
+        # orm: class - table
+        user = UserInfo.objects.get(userid = id , pwd=pwd)
+        print('user result - ', user)
+        context = {}
+        if user is not None:
+            request.session['user_name'] = user.user_name
+            request.session['user_id'] = user.user_id
+            context['name']=request.session['user_name']
+            context['id']=request.session['user_id']
+            return render(request , 'home.html',context)
+        else :
+            return redirect('index')
+
+def registerForm(request):
+
+    print('request - registerForm')
+    return render(request, 'join.html')
+
+def register(request):
+    #id,pwd,name -> model -> db(insert)
+    if request.method == 'POST' :
+        divId = request.POST['divId']
+        divPassword = request.POST['divPassword']
+        divPasswordCheck = request.POST['divPasswordCheck']
+        divName = request.POST['divName']
+        divNickname = request.POST['divNickname']
+        divPhoneNumber = request.POST['divPhoneNumber']
+        charger = request.POST['charger']
+        print('request - ' , divId, divPassword, divPasswordCheck, divName, divNickname, divPhoneNumber, charger)
+        register = UserInfo(userid = divId , pwd = divPassword , usernm = divName, nicknm = divNickname , phonenum = divPhoneNumber,charger = charger )
+        register.save()
+    return render(request, 'login.html')
+def home(request):
+    return render(request, 'home.html')

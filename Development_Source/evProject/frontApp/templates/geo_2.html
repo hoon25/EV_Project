@@ -1,27 +1,97 @@
 {% load static %}
 
+<html lang="en">
 
-<!DOCTYPE html>
-<html>
+
 <head>
-    <meta charset="UTF-8">
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>Simple Sidebar - Start Bootstrap Template</title>
+
+  <!-- Bootstrap core CSS -->
+  <link href="{% static 'vendor/bootstrap/css/bootstrap.css' %}" rel="stylesheet" >
+
+  <!-- Theme CSS -->
+  <link href="{% static 'css/simple-sidebar.css' %}" rel="stylesheet" >
+
+
+</head>
+
+<body>
+
+  <div class="d-flex" id="wrapper">
+
+    <!-- Sidebar -->
+    <div class="bg-light border-right" id="sidebar-wrapper">
+      <div class="align-items-center">
+  <img src="{% static  '/resources/dist/img/icon2.png' %}" class="img-circle" alt="User Image"/>
+      </div>
+      <div class="sidebar-heading">전기차 찾아줘 붕붕차차 </div>
+      <div class="list-group list-group-flush">
+        <a href="/evcharger/mygps" class="list-group-item list-group-item-action bg-light">지도</a>
+        <a href="/evcharger/direction" class="list-group-item list-group-item-action bg-light">길찾기</a>
+        <a href="/evcharger/station" class="list-group-item list-group-item-action bg-light">검색</a>
+        <a href="/evcharger/content_recommendation" class="list-group-item list-group-item-action bg-light">컨텐츠 추천</a>
+
+      </div>
+    </div>
+    <!-- /#sidebar-wrapper -->
+
+    <!-- Page Content -->
+    <div id="page-content-wrapper">
+
+      <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
+        <button class="btn btn-primary" id="menu-toggle">사이드바</button>
+
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav ml-auto mt-2 mt-lg-0">
+            <li class="nav-item active">
+              <a class="nav-link" href="/evcharger/home">Home <span class="sr-only">(current)</span></a>
+
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/evcharger/login">로그인</a>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                메뉴
+              </a>
+              <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="/evcharger/comment">댓글</a>
+                <a class="dropdown-item" href="#">내충전소</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="/evcharger/mypage">내정보</a>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </nav>
+
+      <div>
+           <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
     <title>GPS 기반 반경 2Km 이내 전기차 충전소 위치표시</title>
-    <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=nery8si7l9"></script>
+    <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=fiwz437z83"></script>
     <script src="http://code.jquery.com/jquery-latest.min.js"></script>
     <script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
-</head>
-<body>
+
 <div class = 'search'>
     <button id='evBtn'>충전소 보기</button>
 </div>
 </div>
-    <div id="map" style="width:100%;height:600px;" ></div>
-
-
+    <div id="map" style="width:100%;height:100%;" ></div>
+<!--{% for station in stations %}-->
+<!--{% endfor %}-->
 <script>
-
 $(document).ready(function(){
     $('#evBtn').click(function(){
         console.log(user_lat)
@@ -30,18 +100,33 @@ $(document).ready(function(){
             url : "{% url 'evSearch' %}",
             type : "post",
             data : {"csrfmiddlewaretoken" : '{{csrf_token}}',
-						lat : user_lat,
-						lng : user_lng},
+                  lat : user_lat,
+                  lng : user_lng},
             dataType : 'json',
             success : function(data){
                     var markers = $(data).map(function(i,position){
                         $.each(data, function(idx, obj){
-                            var marker = new naver.maps.Marker({
+                            if (obj.conlevel == 'green-dot.png') {
+                                var marker = new naver.maps.Marker({
                                 position: new naver.maps.LatLng(obj.lat, obj.lng),
                                 map: map,
-                                title: '한산',
                                 icon: "{% static '/img/green-dot.png' %}"
-                            });
+                                });
+                            }
+                            if (obj.conlevel == 'yellow-dot.png') {
+                                var marker = new naver.maps.Marker({
+                                position: new naver.maps.LatLng(obj.lat, obj.lng),
+                                map: map,
+                                icon: "{% static '/img/yellow-dot.png' %}"
+                                });
+                            }
+                            if (obj.conlevel == 'red-dot.png') {
+                                var marker = new naver.maps.Marker({
+                                position: new naver.maps.LatLng(obj.lat, obj.lng),
+                                map: map,
+                                icon: "{% static '/img/red-dot.png' %}"
+                                });
+                            }
                         var content = '<div style="padding:5px;">'
                                        +'충전소명 : '+obj.statNm+'<br/>'
                                        +'주소 : '+obj.addr+'<br/>'
@@ -66,17 +151,11 @@ $(document).ready(function(){
         })
     })
 })
-
-
 var map = new naver.maps.Map('map', {
     center: new naver.maps.LatLng(location),
     zoom: 10,
     minZoom: 10
 });
-
-
-
-
 var infowindow = new naver.maps.InfoWindow();
 user_lat = ""
 user_lng = ""
@@ -85,26 +164,19 @@ function onSuccessGeolocation(position) {
     user_lng = position.coords.longitude
     var location = new naver.maps.LatLng(position.coords.latitude,
                                          position.coords.longitude);
-    alert(location)
-
+<!--    alert(location)-->
     map.setCenter(location); // 얻은 좌표를 지도의 중심으로 설정합니다.
-    map.setZoom(12); // 지도의 줌 레벨을 변경합니다.
-
+    map.setZoom(14); // 지도의 줌 레벨을 변경합니다.
     infowindow.setContent('<div style="padding:10px;">' + '내 위치' + '</div>');
-
     infowindow.open(map, location);
     console.log('Coordinates: ' + location.toString());
 }
-
 function onErrorGeolocation() {
     var center = map.getCenter();
-
     infowindow.setContent('<div style="padding:20px;">' +
         '<h5 style="margin-bottom:5px;color:#f00;">Geolocation failed!</h5>'+ "latitude: "+ center.lat() +"<br />longitude: "+ center.lng() +'</div>');
-
     infowindow.open(map, center);
 }
-
 $(window).on("load", function() {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(onSuccessGeolocation, onErrorGeolocation);
@@ -113,14 +185,26 @@ $(window).on("load", function() {
         infowindow.setContent('<div style="padding:20px;"><h5 style="margin-bottom:5px;color:#f00;">Geolocation not supported</h5></div>');
         infowindow.open(map, center);
     }
-
-
-
-
-
 });
-
-
 </script>
+
+      </div>
+    </div>
+    <!-- /#page-content-wrapper -->
+
+  </div>
+  <!-- /#wrapper -->
+  <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
+  <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+
+  <script>
+    $("#menu-toggle").click(function(e) {
+      e.preventDefault();
+      $("#wrapper").toggleClass("toggled");
+    });
+  </script>
+
+
 </body>
+
 </html>

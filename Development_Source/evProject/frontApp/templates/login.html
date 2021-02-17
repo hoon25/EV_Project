@@ -1,0 +1,72 @@
+{% load static %}
+
+<html lang="ko">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>로그인</title>
+        <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+        <script src="http://code.jquery.com/jquery.js"></script>>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    </head>
+  <body class="login-page">
+    <div class="login-box">
+      <div class="login-logo">
+        <a href="{% url 'home' %}"><b></b>Project</a>
+      </div><!-- /.login-logo -->
+
+<form action="{% url 'login' %}" method="post">
+  {% csrf_token %}
+    <div class="jumbotron">
+			<div class="form-group has-feedback">
+    <input type="text" name="id" class="form-control" placeholder="USER ID"/>
+    <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+  </div>
+  <div class="form-group has-feedback">
+    <input type="password" name="pwd" class="form-control" placeholder="Password"/>
+    <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+  </div>
+
+		</div>
+
+
+  <div class="row">
+    <div class="col-xs-8">    
+
+    </div><!-- /.col -->
+    <div style="text-align: center;">
+        <form action='/test' method='post'>
+        <button type="submit" class="btn btn-primary btn-block btn-flat" style="margin: 0auto ;height: 50px;width: 100px;">Sign In</button></center>
+        </form>
+    </div><!-- /.col -->
+  </div>
+</form>
+
+
+        <a href="{% url 'home' %}">I forgot my password</a><br>
+        <a href="{% url 'registerForm' %}" class="text-center">Register a new membership</a>
+
+      </div><!-- /.login-box-body -->
+    </div><!-- /.login-box -->
+
+    <script>
+      $(function () {
+        $('input').iCheck({
+          checkboxClass: 'icheckbox_square-blue',
+          radioClass: 'iradio_square-blue',
+          increaseArea: '20%' // optional
+        });
+      });
+    </script>
+   <div class="jumbotron">
+			<p class="lead"><center>네이버 아이디로 로그인<br> </p>
+			<!-- (1) 버튼 event 처리를 위하여 id를 지정 id=loginButton -->
+			<p>
+				<div id="naverIdLogin"><a id="naverIdLogin_loginButton" href="#" role="button"><img src="https://static.nid.naver.com/oauth/big_g.PNG" width=320></a></div>
+
+  </body>
+</html>
+
+
+
