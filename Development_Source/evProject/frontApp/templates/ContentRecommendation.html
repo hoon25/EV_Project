@@ -1,0 +1,351 @@
+{% load static %}
+
+<html lang="en">
+
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>컨텐츠 추천</title>
+
+  <!-- Bootstrap core CSS -->
+  <link href="{% static 'vendor/bootstrap/css/bootstrap.css' %}" rel="stylesheet" >
+
+  <!-- Theme CSS -->
+  <link href="{% static 'css/simple-sidebar.css' %}" rel="stylesheet" >
+
+
+</head>
+
+<body>
+
+  <div class="d-flex" id="wrapper">
+
+    <!-- Sidebar -->
+    <div class="bg-light border-right" id="sidebar-wrapper">
+      <div class="align-items-center">
+  <img src="/static/img/icon2.png" width="100%" class="img-circle" alt="User Image">
+      </div>
+      <div class="sidebar-heading">전기차 찾아줘 붕붕차차 </div>
+      <div class="list-group list-group-flush">
+        <a href="/evcharger/mygps" class="list-group-item list-group-item-action bg-light">지도</a>
+        <a href="/evcharger/direction" class="list-group-item list-group-item-action bg-light">길찾기</a>
+        <a href="/evcharger/station" class="list-group-item list-group-item-action bg-light">검색</a>
+        <a href="/evcharger/content_recommendation" class="list-group-item list-group-item-action bg-light">컨텐츠 추천</a>
+
+      </div>
+    </div>
+    <!-- /#sidebar-wrapper -->
+
+    <!-- Page Content -->
+    <div id="page-content-wrapper">
+
+      <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
+        <button class="btn btn-primary" id="menu-toggle">사이드바</button>
+
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav ml-auto mt-2 mt-lg-0">
+            <li class="nav-item active">
+              <a class="nav-link" href="/evcharger/home">Home <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/evcharger/logout">로그인</a>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                메뉴
+              </a>
+              <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="/evcharger/comment">댓글</a>
+                <a class="dropdown-item" href="#">내충전소</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="/evcharger/mypage">내정보</a>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </nav>
+        <div>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+    <title>GPS 기반 컨텐츠 추천</title>
+    <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+    <script type="text/javascript"
+            src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=djtsnlvpvb&submodules=geocoder"></script>
+
+<style type="text/css">
+    .search {
+        position: absolute;
+        z-index: 1000;
+        top: 20px;
+        left: 20px;
+    }
+    .search #address {
+        width: 150px;
+        height: 20px;
+        line-height: 20px;
+        border: solid 1px #555;
+        padding: 5px;
+        font-size: 12px;
+        box-sizing: content-box;
+    }
+    .search #submit {
+        height: 30px;
+        line-height: 30px;
+        padding: 0 10px;
+        font-size: 12px;
+        border: solid 1px #555;
+        border-radius: 3px;
+        cursor: pointer;
+        box-sizing: content-box;
+    }
+</style>
+
+<div id="wrap" class="section">
+    <h2>GPS 기반 컨텐츠 추천</h2>
+    <div id="map" style="width:100%;height:800px;">
+        <div class="search" style="">
+            <input id="address" type="text" placeholder="검색할 주소" value="불정로 6"/>
+            <input id="submit" type="button" value="주소 검색"/>
+        </div>
+    </div>
+    <code id="snippet" class="snippet"></code>
+</div>
+
+<script id="code">
+    // 지도 설정 (시작)
+    var HOME_PATH = window.HOME_PATH || '.';
+    var map = new naver.maps.Map("map", {
+            center: new naver.maps.LatLng(37.3595316, 127.1052133),
+            zoom: 15,  // 줌 설정 : 1~21, 수치가 클수록 지도 확대(줌인), 이 옵션 생략시 기본값 9
+            zoomControl: true, // 줌 컨트롤 표시 (기본값 표시안함)
+            zoomControlOptions: { // 줌 컨트롤 오른쪽 위로 위치 설정
+                position: naver.maps.Position.TOP_RIGHT // 오른쪽 위로 설정값
+            },
+            mapTypeControl: true, // 일반ㆍ위성 지도보기 컨트롤 표시 (기본값 표시안함)
+            activateTrafficMap: true, // 교통량 표시
+            mapTypeId: naver.maps.MapTypeId.NORMAL
+        }),
+        marker = new naver.maps.Marker({
+            map: map,
+            position: naver.maps.LatLng(37.3595316, 127.1052133)
+        });
+    naver.maps.Event.addListener(map, 'click', function (e) {
+        marker.setPosition(e.latlng);
+    });
+    // 지도 설정 (끝)
+    // 지도 유형 (일반, 위성) 설정 (시작)
+    var btns = $(".buttons > input");
+    btns.on("click", function (e) {
+        e.preventDefault();
+        var mapTypeId = this.id;
+        if (map.getMapTypeId() !== naver.maps.MapTypeId.NORMAL) {
+            map.setMapTypeId(naver.maps.MapTypeId.HYBRID); // 지도 유형 변경하기
+            btns.removeClass("control-on");
+            $(this).addClass("control-on");
+        }
+    })
+    // 지도 유형 (일반, 위성) 설정 (끝)
+    // 주소 <-> 좌표 검색 (시작)
+    var infoWindow = new naver.maps.InfoWindow({
+        anchorSkew: true
+    });
+    map.setCursor('pointer');
+    function searchCoordinateToAddress(latlng) {        // 마우스 클릭 시 좌표로 주소 검색
+        infoWindow.close();
+        naver.maps.Service.reverseGeocode({         // 좌표로 주소를 검색하는 reversegeocode API 호출
+            coords: latlng,         // 첫 번째 파라미터는 ServiceOptions 객체의 coords이고 검색할 좌표이며 경도, 위도로 된 문자열 또는 Coord 객체 형태로 전달
+            orders: [   // 두 번째 파라미터는 orders이고 요청의 결과를 처리할 callback함수
+                naver.maps.Service.OrderType.ADDR,
+                naver.maps.Service.OrderType.ROAD_ADDR
+            ].join(',')
+        }, function (status, response) {
+            if (status === naver.maps.Service.Status.ERROR) {
+                return alert('Something Wrong!');
+            }
+            var items = response.v2.results,    // 검색 결과의 컨테이너 배열
+                address = '',
+                htmlAddresses = [];
+            for (var i = 0, ii = items.length, item, addrType; i < ii; i++) {
+                item = items[i];
+                address = makeAddress(item) || '';
+                addrType = item.name === 'roadaddr' ? '[도로명 주소]' : '[지번 주소]';
+                htmlAddresses.push((i + 1) + '. ' + addrType + ' ' + address);
+            }
+            infoWindow.setContent([
+                '<div style="padding:10px;min-width:200px;line-height:150%;">',
+                '<h4 style="margin-top:5px;">검색 좌표</h4><br />',
+                htmlAddresses.join('<br />'),
+                '</div>'
+            ].join('\n'));
+            infoWindow.open(map, latlng, marker);
+        });
+    }
+    function searchAddressToCoordinate(address) {       // 주소 검색 시 지도에 나타내기
+        naver.maps.Service.geocode({        // 주소로 좌표를 검색하는 geocode API 호출
+            query: address          // 첫 번째 파라미터로 ServiceOptions 객체에 query 파라미터이고 검색할 주소의 문자열임. 성공 시 첫 번째 파라미터 실행
+        }, function (status, response) {    // 두 번째 파라미터는 요청의 결과를 처리할 callback함수. status 객체는 서버 API 호출 결과 상태를 나타냄. 실패 시 두 번째 파라미터 실행
+            if (status === naver.maps.Service.Status.ERROR) {
+                return alert('Something Wrong!');
+            }
+            if (response.v2.meta.totalCount === 0) {
+                return alert('totalCount' + response.v2.meta.totalCount);
+            }
+            var htmlAddresses = [],
+                item = response.v2.addresses[0],
+                point = new naver.maps.Point(item.x, item.y);
+            if (item.roadAddress) {
+                htmlAddresses.push('[도로명 주소] ' + item.roadAddress);
+            }
+            if (item.jibunAddress) {
+                htmlAddresses.push('[지번 주소] ' + item.jibunAddress);
+            }
+            if (item.englishAddress) {
+                htmlAddresses.push('[영문명 주소] ' + item.englishAddress);
+            }
+            infoWindow.setContent([
+                '<div style="padding:10px;min-width:200px;line-height:150%;">',
+                '<h4 style="margin-top:5px;">검색 주소 : ' + address + '</h4><br />',
+                htmlAddresses.join('<br />'),
+                '</div>'
+            ].join('\n'));
+            map.setCenter(point);
+            infoWindow.open(map, point, marker);
+        });
+    }
+    function initGeocoder(position) {       // 좌표 초기화
+        if (!map.isStyleMapReady) {
+            return;
+        }
+        map.addListener('click', function (e) {
+            searchCoordinateToAddress(e.coord);
+        });
+        $('#address').on('keydown', function (e) {
+            var keyCode = e.which;
+            if (keyCode === 13) { // Enter Key
+                searchAddressToCoordinate($('#address').val());
+            }
+        });
+        $('#submit').on('click', function (e) {
+            e.preventDefault();
+            searchAddressToCoordinate($('#address').val());
+        });
+        // searchAddressToCoordinate('정자동 178-1');
+    }
+    function makeAddress(item) {
+        if (!item) {
+            return;
+        }
+        var name = item.name,
+            region = item.region,
+            land = item.land,
+            isRoadAddress = name === 'roadaddr';
+        var sido = '', sigugun = '', dongmyun = '', ri = '', rest = '';
+        if (hasArea(region.area1)) {
+            sido = region.area1.name;
+        }
+        if (hasArea(region.area2)) {
+            sigugun = region.area2.name;
+        }
+        if (hasArea(region.area3)) {
+            dongmyun = region.area3.name;
+        }
+        if (hasArea(region.area4)) {
+            ri = region.area4.name;
+        }
+        if (land) {
+            if (hasData(land.number1)) {
+                if (hasData(land.type) && land.type === '2') {
+                    rest += '산';
+                }
+                rest += land.number1;
+                if (hasData(land.number2)) {
+                    rest += ('-' + land.number2);
+                }
+            }
+            if (isRoadAddress === true) {
+                if (checkLastString(dongmyun, '면')) {
+                    ri = land.name;
+                } else {
+                    dongmyun = land.name;
+                    ri = '';
+                }
+                if (hasAddition(land.addition0)) {
+                    rest += ' ' + land.addition0.value;
+                }
+            }
+        }
+        return [sido, sigugun, dongmyun, ri, rest].join(' ');
+    }
+    function hasArea(area) {
+        return !!(area && area.name && area.name !== '');
+    }
+    function hasData(data) {
+        return !!(data && data !== '');
+    }
+    function checkLastString(word, lastString) {
+        return new RegExp(lastString + '$').test(word);
+    }
+    function hasAddition(addition) {
+        return !!(addition && addition.value);
+    }
+    // GPS 기반 현재 위치 (시작)
+    function onSuccessGeolocation(position) {
+        var location = new naver.maps.LatLng(position.coords.latitude,
+            position.coords.longitude);
+        map.setCenter(location); // 얻은 좌표를 지도의 중심으로 설정합니다.
+        map.setZoom(16); // 지도의 줌 레벨을 변경합니다.
+        searchCoordinateToAddress(location)
+    }
+    function onErrorGeolocation() {
+        var center = map.getCenter();
+        infoWindow.setContent('<div style="padding:20px;">' +
+            '<h5 style="margin-bottom:5px;color:#f00;">Geolocation failed!</h5>' + "latitude: " + center.lat() + "<br />longitude: " + center.lng() + '</div>');
+        infoWindow.open(map, center, marker);
+    }
+    $(window).on("load", function () {
+        if (navigator.geolocation) {
+            /**
+             * navigator.geolocation 은 Chrome 50 버젼 이후로 HTTP 환경에서 사용이 Deprecate 되어 HTTPS 환경에서만 사용 가능 합니다.
+             * http://localhost 에서는 사용이 가능하며, 테스트 목적으로, Chrome 의 바로가기를 만들어서 아래와 같이 설정하면 접속은 가능합니다.
+             * chrome.exe --unsafely-treat-insecure-origin-as-secure="http://example.com"
+             */
+            navigator.geolocation.getCurrentPosition(onSuccessGeolocation);
+        } else {
+            var center = map.getCenter();
+            infoWindow.setContent('<div style="padding:20px;"><h5 style="margin-bottom:5px;color:#ff0000;">Geolocation not supported</h5></div>');
+            infoWindow.open(map, center, marker);
+        }
+    });
+    // GPS 기반 현재 위치 (끝)
+    naver.maps.onJSContentLoaded = onSuccessGeolocation;
+    naver.maps.Event.once(map, 'init_stylemap', initGeocoder);
+    // 주소 <-> 좌표 검색 (끝)
+</script>
+</div>
+  <!-- /#wrapper -->
+  <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
+  <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+
+  <script>
+    $("#menu-toggle").click(function(e) {
+      e.preventDefault();
+      $("#wrapper").toggleClass("toggled");
+    });
+  </script>
+</div>
+  </div>
+
+</body>
+
+</html>
