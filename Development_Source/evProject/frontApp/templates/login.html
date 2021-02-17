@@ -11,15 +11,16 @@
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     </head>
   <body class="login-page">
-    <div class="login-box">
-
+      <div class="login-box">
+<p class="lead"><center>
         <a href="{% url 'home' %}"><b></b>Project</a>
+
 
 
 <form action="{% url 'login' %}" method="post">
   {% csrf_token %}
     <div class="jumbotron">
-			<div class="form-group has-feedback">
+        <div class="form-group has-feedback">
     <input type="text" name="id" class="form-control" placeholder="USER ID"/>
     <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
   </div>
@@ -28,7 +29,6 @@
     <span class="glyphicon glyphicon-lock form-control-feedback"></span>
   </div>
 
-		</div>
 
 
   <div class="row">
@@ -41,9 +41,10 @@
         </form>
     </div><!-- /.col -->
   </div>
+        </div>
+
 </form>
-
-
+<center>
         <a href="{% url 'home' %}">I forgot my password</a><br>
         <a href="{% url 'registerForm' %}" class="text-center">Register a new membership</a>
 
@@ -59,12 +60,14 @@
         });
       });
     </script>
-   <div class="jumbotron">
-			<p class="lead"><center>네이버 아이디로 로그인<br> </p>
+   <div class="jumbotron-fluid">
+       <p class="lead"><center></center>
 			<!-- (1) 버튼 event 처리를 위하여 id를 지정 id=loginButton -->
-			<p>
 				<div id="naverIdLogin"><a id="naverIdLogin_loginButton" href="#" role="button"><img src="https://static.nid.naver.com/oauth/big_g.PNG" width=320></a></div>
-
+   </div>
+    <p></p>
+     <img src="/static/img/화면 캡처 2021-02-16 223102.png" width="350" class="img-circle" alt="User Image">
+>
   </body>
 </html>
 
