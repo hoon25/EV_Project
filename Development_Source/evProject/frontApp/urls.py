@@ -15,7 +15,7 @@ urlpatterns = [
     path('direction_search/', views.directionSearch, name='directionSearch'),
     path('station_detail/', views.stationDetail, name = 'stationDetail'),
     # GPS 기반 컨텐츠 추천 (김보라)
-    path('content_recommendation/', views.content_recommendation),
+    path('content_recommendation/', views.content_recommendation, name = 'content_recommendation'),
     #홈페이지 (서은상)
     path('index/', views.index , name='index'),
     path('login/' , views.loginProc, name='login'),
