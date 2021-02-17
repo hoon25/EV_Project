@@ -1,29 +1,32 @@
-from django.shortcuts import render,redirect
+from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from .models import *
 from django.core import serializers
 
-
 from django.db import connection
-from frontApp.getApi.directionApi import getDirectionApi # 네이버지도 길찾기
-from frontApp.getApi.geocodeApi import getGeocode # 네이버 주소 기반 좌표반환
+from frontApp.getApi.directionApi import getDirectionApi  # 네이버지도 길찾기
+from frontApp.getApi.geocodeApi import getGeocode  # 네이버 주소 기반 좌표반환
+from frontApp.searchRegionApi.searchRegion import main      # GPS 기반 컨텐츠 추천 검색
 
-def evgeolocation(request) :
+
+def evgeolocation(request):
     print('request evgeolocation - ')
-    return render(request,'geolocation.html')
+    return render(request, 'geolocation.html')
 
-def mygps(request) :
+
+def mygps(request):
     print('request mygps - ')
-    return render(request,'geo_2.html')
+    return render(request, 'geo_2.html')
 
-def evSearch(request) :
+
+def evSearch(request):
     if request.method == 'POST':
         user_lat = request.POST['lat']
         user_lng = request.POST['lng']
     try:
         cursor = connection.cursor()
         strSql = "select evst.statNm,evst.addr,evst.lat,evst.lng,evst.useTime,evst.busiCall,descInfo,congestion, \
-                (6371*acos(cos(radians("+user_lat+"))*cos(radians(evst.lat))*cos(radians(evst.lng)-radians("+user_lng+"))+sin(radians("+user_lat+"))*sin(radians(evst.lat))))AS distance \
+                (6371*acos(cos(radians(" + user_lat + "))*cos(radians(evst.lat))*cos(radians(evst.lng)-radians(" + user_lng + "))+sin(radians(" + user_lat + "))*sin(radians(evst.lat))))AS distance \
                 from ev_station evst \
                 join ev_real_time evtm on(evst.evsn=evtm.evsn),\
                 (select c.evSn, group_concat(des SEPARATOR '\n') as descInfo \
@@ -45,10 +48,10 @@ def evSearch(request) :
         # cnt = 0
         for station in stations:
             conlevel = ""
-            if station[7]<0.5 :
+            if station[7] < 0.5:
                 conlevel = 'green-dot.png'
                 print(conlevel)
-            elif station[7]<0.99 :
+            elif station[7] < 0.99:
                 conlevel = 'yellow-dot.png'
                 print(conlevel)
             else:
@@ -62,7 +65,7 @@ def evSearch(request) :
                    'busiCall': station[5],
                    'descInfo': station[6],
                    'congestion': station[7],
-                   'distance': station[8] ,
+                   'distance': station[8],
                    'conlevel': conlevel}
             list.append(row)
             # cnt = cnt + 1
@@ -70,16 +73,16 @@ def evSearch(request) :
             #   break
         for a in list:
             print("check - ", a)
-    except :
+    except:
         connection.rollback()
         print('Failed selecting in stations')
     return JsonResponse(list, safe=False)
 
 
-
 def station(request):
     print("check station load")
     return render(request, 'naversearch.html')
+
 
 def stationSearch(request):
     type = request.POST['type']
@@ -97,7 +100,7 @@ def stationSearch(request):
                      "from (select a.evSn, a.chgerId, concat('기기 번호 :', a.chgerId , ' ( 상태 : ' , (select codeName from ev_code_inf where codeId = a.stat) , ', 충전타입 : ' , GROUP_CONCAT((select codeName from ev_code_inf where codeId = b.chgerType) SEPARATOR ','),')') as des " \
                      "from ev.ev_station_status a, ev.ev_station_chgertype b " \
                      "where	a.evSn = b.evSn group by a.evSn, a.chgerId) c group by c.evSn) info " \
-                     "where evst.evSn = info.evSn and evst.statNm Like '%"+keyword+"%';"
+                     "where evst.evSn = info.evSn and evst.statNm Like '%" + keyword + "%';"
 
             result = cursor.execute(strSql)
             stations = cursor.fetchall()
@@ -120,7 +123,7 @@ def stationSearch(request):
                      "from (select a.evSn, a.chgerId, concat('기기 번호 :', a.chgerId , ' ( 상태 : ' , (select codeName from ev_code_inf where codeId = a.stat) , ', 충전타입 : ' , GROUP_CONCAT((select codeName from ev_code_inf where codeId = b.chgerType) SEPARATOR ','),')') as des " \
                      "from ev.ev_station_status a, ev.ev_station_chgertype b " \
                      "where	a.evSn = b.evSn group by a.evSn, a.chgerId) c group by c.evSn) info " \
-                     "where evst.evSn = info.evSn and evst.addr Like '%"+keyword+"%';"
+                     "where evst.evSn = info.evSn and evst.addr Like '%" + keyword + "%';"
 
             result = cursor.execute(strSql)
             stations = cursor.fetchall()
@@ -141,7 +144,7 @@ def stationSearch(request):
                'useTime': station[4],
                'busiCall': station[5],
                'descInfo': station[6],
-               'congestion' : station[7],
+               'congestion': station[7],
                }
         list.append(row)
         cnt += 1
@@ -154,15 +157,14 @@ def stationSearch(request):
     return JsonResponse(list, safe=False)
 
 
-
 def direction(request):
     print("check direction load")
     return render(request, 'naverdirection.html')
 
+
 def directionSearch(request):
     start = request.POST['start']
     goal = request.POST['goal']
-
 
     print("Check Post -", start, goal)
     startGeo = getGeocode(start)
@@ -172,7 +174,7 @@ def directionSearch(request):
     print(startLocation)
     print(goalLocation)
 
-    directionDataList = getDirectionApi(startLocation,goalLocation)
+    directionDataList = getDirectionApi(startLocation, goalLocation)
     # print(directionDataList)
     cursor = connection.cursor()
 
@@ -185,14 +187,11 @@ def directionSearch(request):
 
         try:
 
-            strSql = "select evst.statNm,evst.addr,evst.lat,evst.lng,evst.useTime,evst.busicall,descInfo,congestion,(6371*acos(cos(radians("+latitude+"))*cos(radians(evst.lat))*cos(radians(evst.lng)-radians("+longtitude+"))+sin(radians("+latitude+"))*sin(radians(evst.lat))))AS distance, info.descInfo from ev.ev_station evst join ev_real_time evtm on(evst.evsn=evtm.evsn),(select c.evSn, group_concat(des SEPARATOR '\n') as descInfo from (select	a.evSn, a.chgerId, concat('기기 번호 :', a.chgerId , ' ( 상태 : ' , (select codeName from ev.ev_code_inf where codeId = a.stat) , ', 충전타입 : ', GROUP_CONCAT((select codeName from ev.ev_code_inf where codeId = b.chgerType) SEPARATOR ','),')') as des from ev.ev_station_status a, ev.ev_station_chgertype b where a.evSn = b.evSn group by a.evSn, a.chgerId) c group by c.evSn) info where evst.evSn = info.evSn HAVING distance <= 1 ORDER BY distance;"
+            strSql = "select evst.statNm,evst.addr,evst.lat,evst.lng,evst.useTime,evst.busicall,descInfo,congestion,(6371*acos(cos(radians(" + latitude + "))*cos(radians(evst.lat))*cos(radians(evst.lng)-radians(" + longtitude + "))+sin(radians(" + latitude + "))*sin(radians(evst.lat))))AS distance, info.descInfo from ev.ev_station evst join ev_real_time evtm on(evst.evsn=evtm.evsn),(select c.evSn, group_concat(des SEPARATOR '\n') as descInfo from (select	a.evSn, a.chgerId, concat('기기 번호 :', a.chgerId , ' ( 상태 : ' , (select codeName from ev.ev_code_inf where codeId = a.stat) , ', 충전타입 : ', GROUP_CONCAT((select codeName from ev.ev_code_inf where codeId = b.chgerType) SEPARATOR ','),')') as des from ev.ev_station_status a, ev.ev_station_chgertype b where a.evSn = b.evSn group by a.evSn, a.chgerId) c group by c.evSn) info where evst.evSn = info.evSn HAVING distance <= 1 ORDER BY distance;"
 
             result = cursor.execute(strSql)
             stations = cursor.fetchall()
             print('stations - ', stations)
-
-
-
 
             cnt = 0
             for station in stations:
@@ -203,7 +202,7 @@ def directionSearch(request):
                        'useTime': station[4],
                        'busiCall': station[5],
                        'descInfo': station[6],
-                       'congestion' : station[7],
+                       'congestion': station[7],
                        }
                 list.append(row)
                 cnt += 1
@@ -217,70 +216,86 @@ def directionSearch(request):
     #     print("check - ", a)
     # print(len(list))
 
-
-    return JsonResponse(list, safe = False)
+    return JsonResponse(list, safe=False)
 
 
 def stationDetail(request):
     print("stationDetail load ")
 
-
     return render(request, 'stationDetail.html')
 
+
+# GPS 기반 컨텐츠 추천 (김보라)
 def content_recommendation(request):
     return render(request, 'ContentRecommendation.html')
+
+
+# 컨텐츠 추천 검색 (김보라)
+def content_recommendation_search(request):
+    content_keyword_val = request.POST['content_keyword_val']
+    content_keyword_address = main(content_keyword_val)
+    return JsonResponse(content_keyword_address, safe=False)
+
+
 def mypage(request):
     return render(request, 'mypage.html')
+
+
 def comment(request):
     return render(request, 'comment.html')
 
-#홈페이지
+
+# 홈페이지
 
 def index(request):
     if request.session.get('user_id') and request.session.get('user_name'):
-        context = {'id' : request.session['user_id'],
+        context = {'id': request.session['user_id'],
                    'name': request.session['user_name']}
         return render(request, 'home.html', context)
-    else :
+    else:
         return render(request, 'login.html')
+
 
 def logout(request):
     request.session['user_name'] = {}
     request.session['user_id'] = {}
-    request.session.modified    = True
+    request.session.modified = True
     return redirect('index')
+
+
 def loginProc(request):
     print('request - loginProc')
-    if request.method =='GET':
+    if request.method == 'GET':
         return redirect('index')
-    elif request.method =='POST':
+    elif request.method == 'POST':
         id = request.POST['id']
         pwd = request.POST['pwd']
 
-        #select * from bbsuserregister where user_id = id and user_pwd = pwd
+        # select * from bbsuserregister where user_id = id and user_pwd = pwd
         # orm: class - table
-        user = UserInfo.objects.get(user_id = id , pwd=pwd)
+        user = UserInfo.objects.get(user_id=id, pwd=pwd)
         print('user result - ', user)
         context = {}
         if user is not None:
             request.session['divName'] = user.userNm
             request.session['divId'] = user.user_id
-            context['name']=request.session['divName']
-            context['id']=request.session['divId']
-            return render(request , 'home.html',context)
-        else :
+            context['name'] = request.session['divName']
+            context['id'] = request.session['divId']
+            return render(request, 'home.html', context)
+        else:
             return redirect('index')
 
-def registerForm(request):
 
+def registerForm(request):
     print('request - registerForm')
     return render(request, 'join.html')
 
+
 def register(request):
-    #id,pwd,name -> model -> db(insert)
+    # id,pwd,name -> model -> db(insert)
     if request.method == 'Get':
         return render(request, 'join.html')
-    elif request.method == 'POST' :
+    elif request.method == 'POST':
         divId = request.POST['divId']
         divPassword = request.POST['divPassword']
         divPasswordCheck = request.POST['divPasswordCheck']
@@ -288,11 +303,12 @@ def register(request):
         divNickname = request.POST['divNickname']
         divPhoneNumber = request.POST['divPhoneNumber']
         charger = request.POST['charger']
-        print('request - ' , divId, divPassword, divPasswordCheck, divName, divNickname, divPhoneNumber, charger)
-        register = UserInfo(user_id = divId , pwd = divPassword , userNm = divName, nickNm = divNickname , phoneNum = divPhoneNumber,chgerType = charger )
+        print('request - ', divId, divPassword, divPasswordCheck, divName, divNickname, divPhoneNumber, charger)
+        register = UserInfo(user_id=divId, pwd=divPassword, userNm=divName, nickNm=divNickname, phoneNum=divPhoneNumber,
+                            chgerType=charger)
         register.save()
     return render(request, 'login.html')
+
+
 def home(request):
     return render(request, 'home.html')
-
-
