@@ -175,12 +175,12 @@ $(document).ready(function(){
 
                     var contentString = [
                         '<div class="iw_inner">',
-                        '    <h4>충전소명 : '+data[i].statNm+'</h4>',
+                        '    <h4>충전소명 : '+data[i].statnm+'</h4>',
                         '    <p><a href="{% url 'stationDetail' %}">자세히보기</a></p>',
                         '    <h5>주소 : '+data[i].addr+'</h5>',
                         '    <p>이용가능시간 : '+data[i].useTime+' <br/>',
-                        '    연락처 : '+data[i].busiCall+'<br/>',
-                        '    충전기 : '+data[i].descInfo+'<br/> ',
+                        '    연락처 : '+data[i].busicall+'<br/>',
+                        '    충전기 : '+data[i].info+'<br/> ',
                         '    혼잡도 : '+data[i].congestion,
                         '    </p>',
                         '</div>'
