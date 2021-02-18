@@ -13,7 +13,7 @@ from frontApp.getApi.geocodeApi import getGeocode # 네이버 주소 기반 좌�
 from django.db import connection
 from frontApp.getApi.directionApi import getDirectionApi  # 네이버지도 길찾기
 from frontApp.getApi.geocodeApi import getGeocode  # 네이버 주소 기반 좌표반환
-from frontApp.searchRegionApi.searchRegion import main      # GPS 기반 컨텐츠 추천 검색
+      # GPS 기반 컨텐츠 추천 검색
 
 
 def evgeolocation(request):
@@ -374,21 +374,10 @@ def register(request):
 def home(request):
     return render(request, 'home.html')
 
-    # print("Check Post -", type, keyword)
 
-    if type == 'statnm':
-        stations = EvStation.objects.filter(statnm__icontains = keyword)
-    elif type == 'addr':
-        stations = EvStation.objects.filter(addr__icontains = keyword)
 
-    list = []
-    for station in stations:
-        list.append({
-            'statnm' : station.statnm, 'addr': station.addr, 'lat' : station.lat, 'lng' : station.lng,
-        })
-    for a in list:
-        print("check - ", a)
-    return JsonResponse(list, safe = False)
+
+
 
 
 
