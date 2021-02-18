@@ -1,6 +1,7 @@
 # 사용자 추가
 venv
 *.pyc
+__pycache__/
 
 # Created by https://www.toptal.com/developers/gitignore/api/linux,pycharm,django,windows
 # Edit at https://www.toptal.com/developers/gitignore?templates=linux,pycharm,django,windows
