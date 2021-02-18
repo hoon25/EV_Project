@@ -153,6 +153,9 @@ $(document).ready(function(){
                     goal : goal},
             dataType : 'json',
             success : function(data){
+                if (data == "NoData"){
+                    alert("주소가 정확하지 않습니다. 다시 입력해주세요");
+                    }
 
                 var markers = [],
                     infoWindows = [];

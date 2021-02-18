@@ -218,6 +218,10 @@ def directionSearch(request):
     print("Check Post -", start, goal)
     startGeo = getGeocode(start)
     goalGeo = getGeocode(goal)
+    if startGeo == [] or goalGeo == [] :
+        list = "NoData"
+        return JsonResponse(list, safe=False)
+
     startLocation = startGeo[2] + "," + startGeo[3]
     goalLocation = goalGeo[2] + "," + goalGeo[3]
     print(startLocation)

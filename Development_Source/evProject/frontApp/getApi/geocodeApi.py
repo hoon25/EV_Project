@@ -32,16 +32,21 @@ def getGeocode(query):
                               "X-NCP-APIGW-API-KEY-ID": "djtsnlvpvb",
                               "X-NCP-APIGW-API-KEY": "x4YIbhw6ZKQ6SQQ9y74hkqJiqx8pEtlfU99yp0Y9"})
     json_obj = result.json()
-    roadAddress = lng = json_obj['addresses'][0]['roadAddress']
-    jibunAddress = lng = json_obj['addresses'][0]['jibunAddress']
-    lng = json_obj['addresses'][0]["x"]
-    lat = json_obj['addresses'][0]["y"]
-    list = [roadAddress, jibunAddress, lng, lat]
-    print(list)
+    print(json_obj)
+    try :
+        roadAddress = lng = json_obj['addresses'][0]['roadAddress']
+        jibunAddress = lng = json_obj['addresses'][0]['jibunAddress']
+        lng = json_obj['addresses'][0]["x"]
+        lat = json_obj['addresses'][0]["y"]
+        list = [roadAddress, jibunAddress, lng, lat]
+        print(list)
+    except :
+        list = []
     return list
 
-# data = getGeocode("천호1동")
-# print(data)
+# data = getGeocode("부산역")
+# for i in data:
+#     print(i)
 
 
 
