@@ -1,7 +1,7 @@
 import requests  # 서버접속
 from urllib.parse import urlparse    # 한글 처리
 
-
+#
 # url = "https://naveropenapi.apigw.ntruss.com/map-geocode/v2/geocode?"
 #
 # keyword="query=강동구"
