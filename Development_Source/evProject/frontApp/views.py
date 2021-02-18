@@ -281,9 +281,7 @@ def directionSearch(request):
 
 
 def stationDetail(request):
-    print("stationDetail load ")
-
-    return render(request, 'stationDetail.html')
+    return render(request, 'Comment.html')
 
 
 # GPS 기반 컨텐츠 추천 (김보라)
@@ -302,12 +300,7 @@ def mypage(request):
     return render(request, 'mypage.html')
 
 
-def comment(request):
-    return render(request, 'comment.html')
-
-
 # 홈페이지
-
 def index(request):
     if request.session.get('user_id') and request.session.get('user_name'):
         context = {'id': request.session['user_id'],

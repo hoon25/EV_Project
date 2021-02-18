@@ -24,9 +24,8 @@ urlpatterns = [
     path('registerForm/', views.registerForm, name='registerForm'),
     path('register/', views.register, name='register'),
     path('logout/', views.logout, name='logout'),
-    path('home/', views.home, name='home'),
+    path('', views.home, name='home'),
     path('mypage/', views.mypage, name='mypage'),
-    path('comment/', views.comment, name='comment'),
 
     path('evgeolocation/', views.evgeolocation),
     path('station/', views.station, name = 'station'),
