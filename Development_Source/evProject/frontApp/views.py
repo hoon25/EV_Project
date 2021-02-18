@@ -4,7 +4,6 @@ from django.http import JsonResponse
 from .models import *
 from django.db import connection
 
-
 from frontApp.getApi.directionApi import getDirectionApi # 네이버지도 길찾기
 from frontApp.getApi.geocodeApi import getGeocode # 네이버 주소 기반 좌표반환
 
@@ -109,9 +108,8 @@ def stationSearch(request):
     elif type == 'addr':
         try:
             cursor = connection.cursor()
-            strSql = "select evst.statNm,evst.addr,evst.lat,evst.lng,evst.useTime,evst.busicall,descInfo,congestion " \
-                     "from ev_station evst \
-                join ev_real_time evtm on(evst.evsn=evtm.evsn),(select c.evSn, group_concat(des SEPARATOR '\n') as descInfo " \
+            strSql = "select evst.statNm,evst.addr,evst.lat,evst.lng,evst.useTime,evst.busicall, info.descInfo " \
+                     "from ev.ev_station evst,(select c.evSn, group_concat(des SEPARATOR '\n') as descInfo " \
                      "from (select a.evSn, a.chgerId, concat('기기 번호 :', a.chgerId , ' ( 상태 : ' , (select codeName from ev_code_inf where codeId = a.stat) , ', 충전타입 : ' , GROUP_CONCAT((select codeName from ev_code_inf where codeId = b.chgerType) SEPARATOR ','),')') as des " \
                      "from ev.ev_station_status a, ev.ev_station_chgertype b " \
                      "where	a.evSn = b.evSn group by a.evSn, a.chgerId) c group by c.evSn) info " \
@@ -169,7 +167,7 @@ def directionSearch(request):
 
     directionDataList = getDirectionApi(startLocation,goalLocation)
     # print(directionDataList)
-    cursor = connection.cursor()
+
 
     list = []
     for directionData in directionDataList:
@@ -179,27 +177,26 @@ def directionSearch(request):
         # print(longtitude)
 
         try:
-
-            strSql = "select evst.statNm,evst.addr,evst.lat,evst.lng,evst.useTime,evst.busicall,descInfo,congestion,(6371*acos(cos(radians("+latitude+"))*cos(radians(evst.lat))*cos(radians(evst.lng)-radians("+longtitude+"))+sin(radians("+latitude+"))*sin(radians(evst.lat))))AS distance, info.descInfo from ev.ev_station evst join ev_real_time evtm on(evst.evsn=evtm.evsn),(select c.evSn, group_concat(des SEPARATOR '\n') as descInfo from (select	a.evSn, a.chgerId, concat('기기 번호 :', a.chgerId , ' ( 상태 : ' , (select codeName from ev.ev_code_inf where codeId = a.stat) , ', 충전타입 : ', GROUP_CONCAT((select codeName from ev.ev_code_inf where codeId = b.chgerType) SEPARATOR ','),')') as des from ev.ev_station_status a, ev.ev_station_chgertype b where a.evSn = b.evSn group by a.evSn, a.chgerId) c group by c.evSn) info where evst.evSn = info.evSn HAVING distance <= 1 ORDER BY distance;"
+            cursor = connection.cursor()
+            strSql = "select evst.statNm,evst.addr,evst.lat,evst.lng,evst.busicall, evst.useTime,(6371*acos(cos(radians("+latitude+"))*cos(radians(evst.lat))*cos(radians(evst.lng)-radians("+longtitude+"))+sin(radians("+latitude+"))*sin(radians(evst.lat))))AS distance, info.descInfo from ev.ev_station evst,(select c.evSn, group_concat(des SEPARATOR '\n') as descInfo from (select	a.evSn, a.chgerId, concat('기기 번호 :', a.chgerId , ' ( 상태 : ' , (select codeName from ev.ev_code_inf where codeId = a.stat) , ', 충전타입 : ', GROUP_CONCAT((select codeName from ev.ev_code_inf where codeId = b.chgerType) SEPARATOR ','),')') as des from ev.ev_station_status a, ev.ev_station_chgertype b where a.evSn = b.evSn group by a.evSn, a.chgerId) c group by c.evSn) info where evst.evSn = info.evSn HAVING distance <= 1 ORDER BY distance;"
 
             result = cursor.execute(strSql)
             stations = cursor.fetchall()
-            print('stations - ', stations)
+            # print('stations - ', stations)
 
-
+            connection.commit()
+            connection.close()
 
 
             cnt = 0
             for station in stations:
-                row = {'statNm': station[0],
+                row = {'statnm': station[0],
                        'addr': station[1],
                        'lat': station[2],
                        'lng': station[3],
                        'useTime': station[4],
-                       'busiCall': station[5],
-                       'descInfo': station[6],
-                       'congestion' : station[7],
-                       }
+                       'busicall': station[5],
+                       'info': station[7]}
                 list.append(row)
                 cnt += 1
                 if cnt == 3:
