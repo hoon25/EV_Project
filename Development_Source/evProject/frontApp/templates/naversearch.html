@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {% load static %}
 
 <html lang="en">
@@ -76,11 +77,17 @@
 
       <div>
 
+=======
+<!DOCTYPE html>
+<html>
+<head>
+>>>>>>> origin
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
     <title>간단한 지도 표시하기</title>
     <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=djtsnlvpvb"></script>
+<<<<<<< HEAD
     <style type="text/css">
         div#viewLoading {
         text-align: center;
@@ -105,6 +112,10 @@
 
 
 
+=======
+</head>
+<body>
+>>>>>>> origin
 
 <div class = 'search'>
     <div class = 'search-body'>
@@ -114,6 +125,7 @@
         </select>
         <input type = 'text' id = "searchKeyword">
         <button id="searchBtn">검색</button>
+<<<<<<< HEAD
         <button id="newBtn">초기화</button>
     </div>
     <div class = 'filtering'>
@@ -123,12 +135,15 @@
         <label><input type="checkbox" checked>DC콤보</label>
         <label><input type="checkbox" checked>AC3상</label>
         <button id="filterBtn">필터링</button>
+=======
+>>>>>>> origin
     </div>
 </div>
 <div id="map" style="width:100%;height:800px;"></div>
 
 <script  src="http://code.jquery.com/jquery-latest.min.js"></script>
 <script>
+<<<<<<< HEAD
 
 
 
@@ -153,6 +168,9 @@ $(document).ready(function(){
 		});
 
 
+=======
+$(document).ready(function(){
+>>>>>>> origin
     $('#searchBtn').click(function(){
         type = $('#searchType').val()
         keyword = $('#searchKeyword').val()
@@ -164,6 +182,7 @@ $(document).ready(function(){
                     keyword : keyword},
             dataType : 'json',
             success : function(data){
+<<<<<<< HEAD
 
                 var markers = [],
                     infoWindows = [];
@@ -261,6 +280,16 @@ $(document).ready(function(){
             }
         });
 
+=======
+                for(var i in data){
+                    var marker = new naver.maps.Marker({
+                        position: new naver.maps.LatLng(data[i].lat, data[i].lng),
+                        map: map
+                    });
+                }
+            }
+        });
+>>>>>>> origin
     })
 })
 
@@ -277,6 +306,7 @@ var map = new naver.maps.Map("map", {
     markers = [];
 
 </script>
+<<<<<<< HEAD
       </div>
     </div>
     <!-- /#page-content-wrapper -->
@@ -296,4 +326,7 @@ var map = new naver.maps.Map("map", {
 
 </body>
 
+=======
+</body>
+>>>>>>> origin
 </html>
