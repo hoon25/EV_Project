@@ -7,13 +7,10 @@ from django.http import HttpResponse
 from .models import *
 from django.db import connection
 
-from frontApp.getApi.directionApi import getDirectionApi # 네이버지도 길찾기
-from frontApp.getApi.geocodeApi import getGeocode # 네이버 주소 기반 좌표반환
-
 from django.db import connection
 from frontApp.getApi.directionApi import getDirectionApi  # 네이버지도 길찾기
 from frontApp.getApi.geocodeApi import getGeocode  # 네이버 주소 기반 좌표반환
-      # GPS 기반 컨텐츠 추천 검색
+from frontApp.searchRegionApi.searchRegion import main  # GPS 기반 컨텐츠 추천 검색
 
 
 def evgeolocation(request):
