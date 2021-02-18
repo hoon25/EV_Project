@@ -27,4 +27,11 @@ urlpatterns = [
     path('home/', views.home, name='home'),
     path('mypage/', views.mypage, name='mypage'),
     path('comment/', views.comment, name='comment'),
+
+    path('evgeolocation/', views.evgeolocation),
+    path('station/', views.station, name = 'station'),
+    path('station_search/', views.stationSearch, name = 'stationSearch'),
+
+
 ]
+

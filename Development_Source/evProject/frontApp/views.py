@@ -2,6 +2,13 @@ from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from .models import *
 from django.core import serializers
+from django.http import HttpResponse
+
+from .models import *
+from django.db import connection
+
+from frontApp.getApi.directionApi import getDirectionApi # 네이버지도 길찾기
+from frontApp.getApi.geocodeApi import getGeocode # 네이버 주소 기반 좌표반환
 
 from django.db import connection
 from frontApp.getApi.directionApi import getDirectionApi  # 네이버지도 길찾기
@@ -79,6 +86,49 @@ def evSearch(request):
     return JsonResponse(list, safe=False)
 
 
+
+# Create your views here.
+
+# select * from table ;
+# -> modelName.objects.all()
+
+# select * from table where id = xxxx and pwd = xxxx;
+# -> modelName.objects.get(id = xxxx, pwd = xxxx)
+# -> modelName.objects.filter(id = xxxx, pwd = xxxx)
+
+# select * from table where id = xxxx or pwd = xxxx;
+# -> modelName.objects.filter(Q(id = xxxx) | Q(pwd = xxxx))
+
+# select * from table where subject like '%공지%'
+# -> modelName.objects.filter(subject__icontains = '공지')
+# select * from table where subject like '공지%'
+# -> modelName.objects.filter(subject__startswith = '공지')
+# select * from table where subject like '%공지'
+# -> modelName.objects.filter(subject__endswith = '공지')
+
+# insert into table values()
+# model(attr=value, attr = value)
+# model.save()
+
+# delete * from tableName where id = xxxx
+# -> modelName.objects.get(id=xxx).delete()
+
+# update tableName set attr = value where id = xxxxx
+# obj = modelName.objects.get(id=xxxxx)
+# obj.attr = value
+# obj.save() -- commit
+
+def evgeolocation(request) :
+    print('request evgeolocation - ')
+    return render(request,'geolocation.html')
+
+def station(request):
+    print("check station load")
+    return render(request, 'naversearch.html')
+
+def stationSearch(request):
+    type = request.POST['type']
+    keyword = request.POST['keyword']
 def station(request):
     print("check station load")
     return render(request, 'naversearch.html')
@@ -96,7 +146,7 @@ def stationSearch(request):
             cursor = connection.cursor()
             strSql = "select evst.statNm,evst.addr,evst.lat,evst.lng,evst.useTime,evst.busicall,descInfo,congestion " \
                      "from ev_station evst \
-                join ev_real_time evtm on(evst.evsn=evtm.evsn),(select c.evSn, group_concat(des SEPARATOR '\n') as descInfo " \
+                      join ev_real_time evtm on(evst.evsn=evtm.evsn),(select c.evSn, group_concat(des SEPARATOR '\n') as descInfo " \
                      "from (select a.evSn, a.chgerId, concat('기기 번호 :', a.chgerId , ' ( 상태 : ' , (select codeName from ev_code_inf where codeId = a.stat) , ', 충전타입 : ' , GROUP_CONCAT((select codeName from ev_code_inf where codeId = b.chgerType) SEPARATOR ','),')') as des " \
                      "from ev.ev_station_status a, ev.ev_station_chgertype b " \
                      "where	a.evSn = b.evSn group by a.evSn, a.chgerId) c group by c.evSn) info " \
@@ -117,9 +167,8 @@ def stationSearch(request):
     elif type == 'addr':
         try:
             cursor = connection.cursor()
-            strSql = "select evst.statNm,evst.addr,evst.lat,evst.lng,evst.useTime,evst.busicall,descInfo,congestion " \
-                     "from ev_station evst \
-                join ev_real_time evtm on(evst.evsn=evtm.evsn),(select c.evSn, group_concat(des SEPARATOR '\n') as descInfo " \
+            strSql = "select evst.statNm,evst.addr,evst.lat,evst.lng,evst.useTime,evst.busicall, info.descInfo " \
+                     "from ev.ev_station evst,(select c.evSn, group_concat(des SEPARATOR '\n') as descInfo " \
                      "from (select a.evSn, a.chgerId, concat('기기 번호 :', a.chgerId , ' ( 상태 : ' , (select codeName from ev_code_inf where codeId = a.stat) , ', 충전타입 : ' , GROUP_CONCAT((select codeName from ev_code_inf where codeId = b.chgerType) SEPARATOR ','),')') as des " \
                      "from ev.ev_station_status a, ev.ev_station_chgertype b " \
                      "where	a.evSn = b.evSn group by a.evSn, a.chgerId) c group by c.evSn) info " \
@@ -176,7 +225,7 @@ def directionSearch(request):
 
     directionDataList = getDirectionApi(startLocation, goalLocation)
     # print(directionDataList)
-    cursor = connection.cursor()
+
 
     list = []
     for directionData in directionDataList:
@@ -186,6 +235,16 @@ def directionSearch(request):
         # print(longtitude)
 
         try:
+            cursor = connection.cursor()
+            strSql = "select evst.statNm,evst.addr,evst.lat,evst.lng,evst.busicall, evst.useTime,(6371*acos(cos(radians("+latitude+"))*cos(radians(evst.lat))*cos(radians(evst.lng)-radians("+longtitude+"))+sin(radians("+latitude+"))*sin(radians(evst.lat))))AS distance, info.descInfo from ev.ev_station evst,(select c.evSn, group_concat(des SEPARATOR '\n') as descInfo from (select	a.evSn, a.chgerId, concat('기기 번호 :', a.chgerId , ' ( 상태 : ' , (select codeName from ev.ev_code_inf where codeId = a.stat) , ', 충전타입 : ', GROUP_CONCAT((select codeName from ev.ev_code_inf where codeId = b.chgerType) SEPARATOR ','),')') as des from ev.ev_station_status a, ev.ev_station_chgertype b where a.evSn = b.evSn group by a.evSn, a.chgerId) c group by c.evSn) info where evst.evSn = info.evSn HAVING distance <= 1 ORDER BY distance;"
+
+            result = cursor.execute(strSql)
+            stations = cursor.fetchall()
+            # print('stations - ', stations)
+
+            connection.commit()
+            connection.close()
+
 
             strSql = "select evst.statNm,evst.addr,evst.lat,evst.lng,evst.useTime,evst.busicall,descInfo,congestion,(6371*acos(cos(radians(" + latitude + "))*cos(radians(evst.lat))*cos(radians(evst.lng)-radians(" + longtitude + "))+sin(radians(" + latitude + "))*sin(radians(evst.lat))))AS distance, info.descInfo from ev.ev_station evst join ev_real_time evtm on(evst.evsn=evtm.evsn),(select c.evSn, group_concat(des SEPARATOR '\n') as descInfo from (select	a.evSn, a.chgerId, concat('기기 번호 :', a.chgerId , ' ( 상태 : ' , (select codeName from ev.ev_code_inf where codeId = a.stat) , ', 충전타입 : ', GROUP_CONCAT((select codeName from ev.ev_code_inf where codeId = b.chgerType) SEPARATOR ','),')') as des from ev.ev_station_status a, ev.ev_station_chgertype b where a.evSn = b.evSn group by a.evSn, a.chgerId) c group by c.evSn) info where evst.evSn = info.evSn HAVING distance <= 1 ORDER BY distance;"
 
@@ -195,11 +254,13 @@ def directionSearch(request):
 
             cnt = 0
             for station in stations:
-                row = {'statNm': station[0],
+                row = {'statnm': station[0],
                        'addr': station[1],
                        'lat': station[2],
                        'lng': station[3],
                        'useTime': station[4],
+                       'busicall': station[5],
+                       'info': station[7],
                        'busiCall': station[5],
                        'descInfo': station[6],
                        'congestion': station[7],
@@ -312,3 +373,24 @@ def register(request):
 
 def home(request):
     return render(request, 'home.html')
+
+    # print("Check Post -", type, keyword)
+
+    if type == 'statnm':
+        stations = EvStation.objects.filter(statnm__icontains = keyword)
+    elif type == 'addr':
+        stations = EvStation.objects.filter(addr__icontains = keyword)
+
+    list = []
+    for station in stations:
+        list.append({
+            'statnm' : station.statnm, 'addr': station.addr, 'lat' : station.lat, 'lng' : station.lng,
+        })
+    for a in list:
+        print("check - ", a)
+    return JsonResponse(list, safe = False)
+
+
+
+
+
