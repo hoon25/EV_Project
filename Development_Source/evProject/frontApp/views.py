@@ -273,7 +273,7 @@ def directionSearch(request):
 
 
 def stationDetail(request):
-    return render(request, 'Comment.html')
+    return render(request, 'comment.html')
 
 
 # GPS 기반 컨텐츠 추천 (김보라)
