@@ -299,7 +299,3 @@ $RECYCLE.BIN/
 *.lnk
 
 # End of https://www.toptal.com/developers/gitignore/api/linux,pycharm,django,windows
-<<<<<<< HEAD
-=======
-*.assets/
->>>>>>> parent of f0b1e2d (Fix .gitignore to work)
