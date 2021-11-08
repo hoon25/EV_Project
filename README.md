@@ -18,6 +18,14 @@
 - branch 
   - master / develop 으로 운영
 
+## 아키텍쳐
+
+![image-20211108221911779](README.assets/image-20211108221911779.png)
+
+![image-20211108222047935](README.assets/image-20211108222047935.png)
+
+![image-20211108222423981](README.assets/image-20211108222423981.png)
+
 ## 팀
 
 ### 저희멋지조
